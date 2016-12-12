@@ -12,10 +12,10 @@ public class PrintAvg {
 
     public static void main(String[] args) {
         //String fileName = "/Users/jianguog/stock/002384.txt";
-        //String fileName = "/Users/jianguog/stock/600258.txt";
-        String fileName = "/Users/jianguog/stock/369.txt";
+        String fileName = "/Users/jianguog/stock/600258.txt";
+        //String fileName = "/Users/jianguog/stock/369.txt";
         PrintAvg st = new PrintAvg(fileName);
-        st.buildAvgArray(30);
+        st.buildAvgArray(44);
     }
 
     ArrayList buildAvgArray (int avgDays){
