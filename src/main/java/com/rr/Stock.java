@@ -9,17 +9,19 @@ import java.util.ArrayList;
 public class Stock {
     public static void main(String[] args) {
 
+        //002384 -295
         //String fileName = "/Users/jianguog/stock/002384.txt";
-
+        //600258-44,
         //String fileName = "/Users/jianguog/stock/600258.txt";
-        //000725
-        String fileName = "/Users/jianguog/stock/cool.txt";
-        //601369
-        //String fileName = "/Users/jianguog/stock/369.txt";
+        //000725-193
+        //String fileName = "/Users/jianguog/stock/cool.txt";
+        //601369-64(12)
+        String fileName = "/Users/jianguog/stock/369.txt";
         Stock st = new Stock(fileName, 5, 0.02, 0.02);
         try {
             st.calculate();
-            //st.calculateSomeDays(137);
+            //st.calculateSomeDays(12);
+            //st.calculateSomeDays(64);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,13 +58,14 @@ public class Stock {
         double minValue = 99990;
         double maxValue = -1;
         double maxLoc = 0;
-        for (int i=28; i< 750; i++){
+        //for (int i=28; i< 365; i++){
+        for (int i=28; i< 540; i++){
             double value = calculateWithNumber(i);
             if (value > maxValue) {
                 maxValue = value;
                 maxLoc = i;
             }
-            //System.out.println("Calculating day average ="+i + "  value="+ value);
+            System.out.println("Calculating day average ="+i + "  value="+ value);
         }
         System.out.println("maxLoc="+maxLoc + "  maxValue="+ maxValue);
         System.out.println("min=" + min + " max=" + max + " increaseMathcRatio=" + increaseMathcRatio + " increaseTolearnce="+increaseTolearnce);
@@ -80,7 +83,6 @@ public class Stock {
         ArrayList<Double> priceList = getClosePrice();
         ArrayList<Double> avgPrices = buildAvgArray(avgDays);
 
-
         double sumValue = 0;
         double count = 0;
         for(Integer i : increasePoints ){
@@ -89,7 +91,7 @@ public class Stock {
                 if (Math.abs(avgPrices.get(i) - priceList.get(i)) < priceList.get(i)*lineMatchRatio) {
                     //sumValue = sumValue + avgPrices.get(i) - originClosePrice.get(i);
                     count++;
-                    //System.out.println("found i = " + i + "  " + avgPrices.get(i) + "  " + priceList.get(i));
+                    System.out.println("found = " + i + "  " + avgPrices.get(i) + "  " + priceList.get(i));
                 }
             }
         }
@@ -103,7 +105,7 @@ public class Stock {
         ArrayList<Integer> increasePoints = new ArrayList();
         boolean isIncreasing = false;
         for (int i = 0; i<totalDays-1 - 30; i++ ){
-            System.out.println("i=" + i + "priceList.get(i)=" + priceList.get(i) + " " + isIncreasing);
+            System.out.println("checking increasing=" + i + "priceList.get(i)=" + priceList.get(i) + " " + isIncreasing);
             if (canIncreaseMeetRange(priceList, i) && !isIncreasing) {
                 increasePoints.add(i);
                 System.out.println("adding increase" + i);
