@@ -8,12 +8,16 @@ import java.util.ArrayList;
 
 public class Stock {
 
+    ArrayList<Double> originClosePrice = new ArrayList();
+
     public static void main(String[] args) {
-        Stock st = new Stock();
+
+        //String fileName = "/Users/jianguog/stock/002384.txt";
+        //String fileName = "/Users/jianguog/stock/600258.txt";
+        //String fileName = "/Users/jianguog/stock/cool.txt";
+        String fileName = "/Users/jianguog/stock/369.txt";
+        Stock st = new Stock(fileName);
         try {
-            String fileName = "/Users/jianguog/stock/002384.txt";
-            //String fileName = "/Users/jianguog/stock/600258.txt";
-            st.readInputs(fileName);
             st.calculate();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -23,26 +27,38 @@ public class Stock {
 
     }
 
-    ArrayList<Double> originClosePrice = new ArrayList();
+//    public void calculate() throws IOException {
+//        double maxValue = 0;
+//        double maxLoc = 0;
+//        for (int i=2; i< 730; i++){
+//            double value = calculateWithNumber(i);
+//            if (value>maxValue) {
+//                maxValue = value;
+//                maxLoc = i;
+//            }
+//            System.out.println("i="+i + "  value="+ value);
+//        }
+//        System.out.println("maxLoc="+maxLoc + "  maxValue="+ maxValue);
+//    }
+
     public void calculate() throws IOException {
-        double maxValue = 0;
+        double minValue = 99990;
         double maxLoc = 0;
-        for (int i=2; i< 365; i++){
+        for (int i=2; i< 730; i++){
             double value = calculateWithNumber(i);
-            if (value>maxValue) {
-                maxValue = value;
+            if (value < minValue) {
+                minValue = value;
                 maxLoc = i;
             }
             System.out.println("i="+i + "  value="+ value);
         }
-        System.out.println("maxLoc="+maxLoc + "  maxValue="+ maxValue);
+        System.out.println("maxLoc="+maxLoc + "  maxValue="+ minValue);
     }
     public double calculateWithNumber(int avgDays) throws IOException {
 
-        int totalDays = originClosePrice.size();
         // caluclate avg list first
-        ArrayList<Double> avgPrices = buildAvgArray(avgDays, totalDays);
-        ArrayList<Integer> increasePoints = getIncreasePoints(totalDays);
+        ArrayList<Double> avgPrices = buildAvgArray(avgDays);
+        ArrayList<Integer> increasePoints = getIncreasePoints();
 
         double sumValue = 0;
         double count = 0;
@@ -55,7 +71,8 @@ public class Stock {
         return sumValue/count;
     }
 
-    ArrayList getIncreasePoints(int totalDays) {
+    ArrayList getIncreasePoints() {
+        int totalDays = originClosePrice.size();
         ArrayList<Integer> increasePoints = new ArrayList();
         boolean isIncreasing = false;
         for (int i = 1; i<totalDays-1; i++ ){
@@ -70,23 +87,28 @@ public class Stock {
 
     }
 
-    ArrayList buildAvgArray (int avgDays, int totalDays){
-        ArrayList avgPrices = new ArrayList();
-        int remainingDays = avgDays;
-        for (int i = 0; i<totalDays; i++  ){
-            if (i+ remainingDays > totalDays){
-                remainingDays--;
-            }
+    ArrayList buildAvgArray (int avgDays){
+        int totalDays = originClosePrice.size();
+        ArrayList<Double> avgPrices = new ArrayList();
+        for (int i = 0; i<avgDays ; i++  ){
+            avgPrices.add(0.0);
+        }
+        for (int i = avgDays; i<totalDays; i++  ){
             double sum = 0;
-            for (int j=0; j<remainingDays; j++){
-                sum = sum + (Double)originClosePrice.get(i+j);
+            for (int j=0; j<avgDays; j++){
+                sum = sum + (Double)originClosePrice.get(i-j -1);
             }
-            double avg = sum/remainingDays;
+            double avg = sum/avgDays;
             //System.out.println(sum+ "  " + remainingDays + "  " + avg);
+
             avgPrices.add(avg);
         }
+//        for (Double d : avgPrices){
+//            System.out.println(d);
+//        }
         return avgPrices;
     }
+
     public void readInputs(String fileName) throws IOException {
         File file = new File(fileName);
         FileReader fr = new FileReader(file);
@@ -100,5 +122,12 @@ public class Stock {
         fr.close();
     }
 
+    public Stock(String fileName) {
+        try {
+            readInputs(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
