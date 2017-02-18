@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class Stock {
     public static void main(String[] args) {
 
+        long startTime = System.currentTimeMillis();
         //002384 -295
         //String fileName = "/Users/jianguog/stock/002384.txt";
         //600258-44,
@@ -17,7 +18,8 @@ public class Stock {
         //String fileName = "/Users/jianguog/stock/cool.txt";
         //601369-64(12)
         String fileName = "/Users/jianguog/stock/369.txt";
-        Stock st = new Stock(fileName, 5, 0.02, 0.02);
+        File file = new File(fileName);
+        Stock st = new Stock(file, 5, 0.02, 0.02, 0.03, "\t");
         try {
             st.calculate();
             //st.calculateSomeDays(12);
@@ -25,29 +27,38 @@ public class Stock {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //System.out.println("running time is " + (System.currentTimeMillis() - startTime));
     }
 
     ArrayList<Double> originClosePrice = new ArrayList();
     ArrayList<Double> smoothedClosePrice = new ArrayList();
     ArrayList<Integer> increasePoints = new ArrayList();
+
     double min = 99999999;
     double max = -1;
     double increaseMathcRatio;
     double lineMatchRatio;
     double increaseTolearnce;
+    double decideRatio;
+    String stockId;
+    String separator;
+
     public ArrayList<Double> getClosePrice(){
         //return smoothedClosePrice;
         return originClosePrice;
     }
 
-    public Stock(String fileName, int avg, double increaseMathcRatio, double lineMatchRatio) {
+    public Stock(File file, int avg, double increaseMathcRatio, double lineMatchRatio, double decideRatio,String separator) {
         try {
-            readInputs(fileName);
-            smoothedClosePrice = buildAvgArray(avg);
+            stockId =  file.getName();
+            this.separator = separator;
+            readInputs(file);
+            //smoothedClosePrice = buildAvgArray(avg);
             this.increaseMathcRatio = increaseMathcRatio;
             this.increaseTolearnce = (max - min) * increaseMathcRatio;
             this.lineMatchRatio = lineMatchRatio;
             increasePoints = getIncreasePoints();
+            this.decideRatio = decideRatio;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,9 +66,13 @@ public class Stock {
 
 
     public void calculate() throws IOException {
+        if (originClosePrice.size() < 100) {
+            System.out.println(stockId+","+0+","+0+","+0+","+0+","+"SKIPED");
+            return;
+        }
         double minValue = 99990;
         double maxValue = -1;
-        double maxLoc = 0;
+        int maxLoc = 0;
         //for (int i=28; i< 365; i++){
         for (int i=28; i< 540; i++){
             double value = calculateWithNumber(i);
@@ -65,10 +80,15 @@ public class Stock {
                 maxValue = value;
                 maxLoc = i;
             }
-            System.out.println("Calculating day average ="+i + "  value="+ value);
+            //System.out.println("Calculating day average ="+i + "  value="+ value);
         }
-        System.out.println("maxLoc="+maxLoc + "  maxValue="+ maxValue);
-        System.out.println("min=" + min + " max=" + max + " increaseMathcRatio=" + increaseMathcRatio + " increaseTolearnce="+increaseTolearnce);
+        Double lastRealPrice = getClosePrice().get(getClosePrice().size() - 1);
+        Double lastAvgPrice = (Double)buildAvgArray(maxLoc).get(getClosePrice().size() - 1);
+        boolean selected = Math.abs((lastAvgPrice - lastRealPrice)/lastRealPrice) < decideRatio;
+
+        System.out.println(stockId+","+maxLoc+"," + maxValue +","+lastRealPrice+","+lastAvgPrice+","+selected);
+        //System.out.println("maxLoc="+maxLoc + "  maxValue="+ maxValue);
+        //System.out.println("min=" + min + " max=" + max + " increaseMathcRatio=" + increaseMathcRatio + " increaseTolearnce="+increaseTolearnce);
     }
 
     public void calculateSomeDays(int day) throws IOException {
@@ -91,7 +111,7 @@ public class Stock {
                 if (Math.abs(avgPrices.get(i) - priceList.get(i)) < priceList.get(i)*lineMatchRatio) {
                     //sumValue = sumValue + avgPrices.get(i) - originClosePrice.get(i);
                     count++;
-                    System.out.println("found = " + i + "  " + avgPrices.get(i) + "  " + priceList.get(i));
+                    //System.out.println("found = " + i + "  " + avgPrices.get(i) + "  " + priceList.get(i));
                 }
             }
         }
@@ -105,16 +125,16 @@ public class Stock {
         ArrayList<Integer> increasePoints = new ArrayList();
         boolean isIncreasing = false;
         for (int i = 0; i<totalDays-1 - 30; i++ ){
-            System.out.println("checking increasing=" + i + "priceList.get(i)=" + priceList.get(i) + " " + isIncreasing);
+            //System.out.println("checking increasing=" + i + "priceList.get(i)=" + priceList.get(i) + " " + isIncreasing);
             if (canIncreaseMeetRange(priceList, i) && !isIncreasing) {
                 increasePoints.add(i);
-                System.out.println("adding increase" + i);
+                //System.out.println("adding increase" + i);
                 isIncreasing = true;
             } else if (isDecreaseMeetRange( priceList, i) && isContinueDecrease( priceList, i)){
                 isIncreasing = false;
             }
         }
-        System.out.println(increasePoints.size());
+        //System.out.println(increasePoints.size());
         return increasePoints;
 
     }
@@ -176,21 +196,23 @@ public class Stock {
         return avgPrices;
     }
 
-    public void readInputs(String fileName) throws IOException {
-        File file = new File(fileName);
+    public void readInputs(File file) throws IOException {
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
         String line;
         while((line = br.readLine()) != null){
-            String[] colums = line.split("\t");
-            double value = Double.parseDouble(colums[4]);
-            if (value > max) {
-                max = value;
+
+            if (line.trim().startsWith("20")) {
+                String[] colums = line.split(separator);
+                double value = Double.parseDouble(colums[4]);
+                if (value > max) {
+                    max = value;
+                }
+                if (value < min) {
+                    min = value;
+                }
+                originClosePrice.add(value);
             }
-            if (value < min) {
-                min = value;
-            }
-            originClosePrice.add(value);
         }
         br.close();
         fr.close();
