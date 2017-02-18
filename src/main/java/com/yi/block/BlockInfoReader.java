@@ -1,5 +1,6 @@
 package com.yi.block;
 
+import com.yi.YiConstants;
 import com.yi.utils.XmlReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -12,7 +13,7 @@ public class BlockInfoReader {
 
     public static void main(String[] args) {
         BlockInfoReader blockInfoReader = new BlockInfoReader();
-        blockInfoReader.getBlockInfo("/Users/jianguog/other/yistock/SystemBlockInfo.new.txt");
+        blockInfoReader.getBlockInfo(YiConstants.blockInfoFileString);
     }
 
     public void getBlockInfo(String blockInfoFile){
