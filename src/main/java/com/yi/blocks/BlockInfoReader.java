@@ -1,4 +1,4 @@
-package com.yi.block;
+package com.yi.blocks;
 
 import com.yi.YiConstants;
 import com.yi.utils.XmlReader;
@@ -13,16 +13,16 @@ public class BlockInfoReader {
 
     public static void main(String[] args) {
         BlockInfoReader blockInfoReader = new BlockInfoReader();
-        blockInfoReader.getBlockInfo(YiConstants.blockInfoFileString);
+        blockInfoReader.getBlockData(YiConstants.blockInfoFileString);
     }
 
-    public void getBlockInfo(String blockInfoFile){
+    public BlockData getBlockData(String blockInfoFile){
         XmlReader xmlReader = new XmlReader();
         Document blockDocument = xmlReader.readXmlFileToDocument(blockInfoFile);
-        parseBlockInfo(blockDocument);
+        return parseBlockData(blockDocument);
     }
 
-    void parseBlockInfo(Document blockDocument){
+    BlockData parseBlockData(Document blockDocument){
         NodeList bkNodeList = blockDocument.getElementsByTagName("BK");
         BlockData blockData = new BlockData();
         for (int bkIndex = 0; bkIndex< bkNodeList.getLength(); bkIndex++){
@@ -43,11 +43,12 @@ public class BlockInfoReader {
                 bc.setName(bcNameNode.getNodeValue());
                 //System.out.println(bc.getName());
                 Node stockNode = bcNode.getAttributes().getNamedItem("Stock");
-                bc.setStocks(stockNode.getNodeValue().split(";"));
+                bc.setStockIds(stockNode.getNodeValue().split(";"));
                 //System.out.println(bc.getStocks().length);
             }
         }
-        blockData.printBlockData();
+        //blockData.printBlockData();
+        return blockData;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.yi.block;
+package com.yi.blocks;
 
 import java.util.ArrayList;
 import java.util.List;

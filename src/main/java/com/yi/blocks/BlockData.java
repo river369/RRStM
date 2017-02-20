@@ -1,8 +1,7 @@
-package com.yi.block;
+package com.yi.blocks;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by jianguog on 17/2/18.
@@ -18,16 +17,15 @@ public class BlockData {
         this.bkList = bkList;
     }
 
-    void printBlockData(){
+    public void printBlockData(){
         for (BK bk: bkList) {
             //System.out.println("BK=" + bk.getName());
             for (BC bc :bk.getBcList()){
                 //System.out.println("  BC=" + bc.getName());
-                for(String stock : bc.getStocks()) {
+                for(String stockId : bc.getStockIds()) {
                     //System.out.println("    " + stock);
-                    System.out.println(bk.getName() + ";" + bc.getName() + ";" + stock);
+                    System.out.println(bk.getName() + ";" + bc.getName() + ";" + stockId);
                 }
-
             }
         }
     }
