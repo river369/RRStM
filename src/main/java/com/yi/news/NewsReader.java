@@ -36,7 +36,7 @@ public class NewsReader {
             int count = 0;
             if (newsCountString != null){
                 count = Integer.parseInt(newsCountString);
-                System.out.println(count);
+                //System.out.println(count);
             }
             newsCountList.add(count);
         }
