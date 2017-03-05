@@ -9,7 +9,7 @@ import java.io.IOException;
 public class AllStocks {
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
-        //AllStocks all = new AllStocks("/Users/jianguog/stock/export");
+        //AllStocksReader all = new AllStocksReader("/Users/jianguog/stock/export");
         AllStocks all = new AllStocks(args[0]);
         all.goThrough();
         System.out.println("Runing time is " + (System.currentTimeMillis() - startTime));

@@ -1,14 +1,15 @@
-package com.yi.stocks;
+package com.yi.aggregratestocks;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
 
 /**
  * Created by jianguog on 17/2/19.
+ *
+ * Content info of "String stockId";
+ *
  */
 public class DistinctStock {
-
-    //String stockId;
 
     // BK_BC, 行业_电力
     TreeSet<String> blocks = new TreeSet<String>();

@@ -6,17 +6,20 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.Map;
+
 /**
  * Created by jianguog on 17/2/18.
  */
 public class BlockInfoReader {
 
-    public static void main(String[] args) {
-        BlockInfoReader blockInfoReader = new BlockInfoReader();
-        blockInfoReader.getBlockData(YiConstants.blockInfoFileString);
+    String blockInfoFile;
+
+    public BlockInfoReader(String blockInfoFile) {
+        this.blockInfoFile = blockInfoFile;
     }
 
-    public BlockData getBlockData(String blockInfoFile){
+    public BlockData getBlockData(){
         XmlReader xmlReader = new XmlReader();
         Document blockDocument = xmlReader.readXmlFileToDocument(blockInfoFile);
         return parseBlockData(blockDocument);
@@ -49,6 +52,11 @@ public class BlockInfoReader {
         }
         //blockData.printBlockData();
         return blockData;
+    }
+
+    public static void main(String[] args) {
+        BlockInfoReader blockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
+        blockInfoReader.getBlockData().printBlockData();
     }
 
 }

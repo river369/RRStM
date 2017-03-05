@@ -10,6 +10,13 @@ import java.util.GregorianCalendar;
  */
 public class DateUtils {
 
+    public static void main(String[] args) {
+        System.out.println(getTodayString());
+        System.out.println(getYesterdayString());
+        System.out.println(getCurrentTimeToSecondString());
+        System.out.println(getCurrentTimeToMinuteString());
+    }
+
     public static String getTodayString(){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         return df.format(new Date());
@@ -25,9 +32,13 @@ public class DateUtils {
         return formatter.format(date);
     }
 
-    public static void main(String[] args) {
-        System.out.println(getTodayString());
-        System.out.println(getYesterdayString());
+    public static String getCurrentTimeToSecondString(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        return df.format(new Date());
     }
 
+    public static String getCurrentTimeToMinuteString(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
+        return df.format(new Date());
+    }
 }

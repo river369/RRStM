@@ -1,13 +1,8 @@
 package com.yi.news;
 
 import com.yi.YiConstants;
-import com.yi.blocks.BC;
-import com.yi.blocks.BK;
-import com.yi.blocks.BlockData;
-import com.yi.blocks.BlockInfoReader;
-import com.yi.stocks.AggregateStocks;
-import com.yi.stocks.DistinctStock;
-import com.yi.utils.DateUtils;
+import com.yi.aggregratestocks.AggregateStocks;
+import com.yi.aggregratestocks.DistinctStock;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;

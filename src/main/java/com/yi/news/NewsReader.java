@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * Created by jianguog on 17/2/18.
  */
 public class NewsReader {
-    String charset = "GBK";
+
     String block = "板块";
     String[] keys = {"世界技术突破","国家政策","国家产业革命"};
 
@@ -30,7 +30,7 @@ public class NewsReader {
         List<Integer> newsCountList = new ArrayList<Integer>();
         for (String key : keys) {
             String response = HttpReader.sendGet(YiConstants.sinaSearchURL,
-                    buildParameters(stock, key, DateUtils.getYesterdayString(), DateUtils.getTodayString()), charset);
+                    buildParameters(stock, key, DateUtils.getYesterdayString(), DateUtils.getTodayString()), YiConstants.gbkCharset);
             //System.out.println(response);
             String newsCountString = parseNewsCountString(response);
             int count = 0;

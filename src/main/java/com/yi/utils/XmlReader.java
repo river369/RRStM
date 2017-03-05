@@ -19,8 +19,8 @@ public class XmlReader {
     public Document readXmlFileToDocument(String fileString){
         String content = null;
         try {
-            //content = FileUtils.readFileToString(new File(fileString), "UTF-16le");
-            content = FileUtils.readFileToString(new File(fileString), "UTF-8");
+            content = FileUtils.readFileToString(new File(fileString), "UTF-16");
+            //content = FileUtils.readFileToString(new File(fileString), "UTF-8");
             //System.out.println(content);
         } catch (IOException e) {
             e.printStackTrace();

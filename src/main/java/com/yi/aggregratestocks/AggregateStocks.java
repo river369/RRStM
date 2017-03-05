@@ -1,4 +1,4 @@
-package com.yi.stocks;
+package com.yi.aggregratestocks;
 
 import com.yi.YiConstants;
 import com.yi.blocks.BC;
@@ -20,8 +20,8 @@ public class AggregateStocks {
     }
 
     public TreeMap<String, DistinctStock> buildDistinctStocks(){
-        BlockInfoReader blockInfoReader = new BlockInfoReader();
-        BlockData blockData = blockInfoReader.getBlockData(YiConstants.blockInfoFileString);
+        BlockInfoReader blockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
+        BlockData blockData = blockInfoReader.getBlockData();
         //blockData.printBlockData();
         TreeMap<String, DistinctStock> distinctStockTreeMap = new TreeMap<String, DistinctStock>();
         for (BK bk: blockData.getBkList()) {
