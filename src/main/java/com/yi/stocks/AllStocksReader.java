@@ -19,12 +19,18 @@ public class AllStocksReader {
         allStocks.getStocksMap();
     }
 
+    /**
+     * @return key is stock code, value is stock name
+     */
     public Map<String, String> getStocksMap() {
         String response = HttpReader.sendGet(YiConstants.eastMoneyUrl, "", YiConstants.gbkCharset);
         //System.out.println(response);
         return parseStockString(response);
     }
 
+    /**
+     * @return key is stock code, value is stock name
+     */
     public Map<String, String> parseStockString(String str) {
         Map<String, String> stockMap = new HashMap<String, String>();
         //<li><a target="_blank" href="http://quote.eastmoney.com/sz000660.html">*ST南华(000660)</a></li>

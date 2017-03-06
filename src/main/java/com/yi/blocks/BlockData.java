@@ -1,8 +1,5 @@
 package com.yi.blocks;
 
-import com.yi.YiConstants;
-import com.yi.aggregratestocks.DistinctStock;
-
 import java.util.*;
 
 /**
@@ -24,8 +21,18 @@ public class BlockData {
      * @param allStocksMap all stock from east money
      * @return  Key is stock, value is blocks set
      */
-    public TreeMap<String, TreeSet<String>> getDistinctStocksToBlocksMap(Map<String, String> allStocksMap, TreeSet<String> bcNames){
-        TreeMap<String, TreeSet<String>> distinctStockTreeMap = new TreeMap<String, TreeSet<String>>();
+    public TreeMap<String, HashSet<String>> getDistinctStocksToBlocksMap(Map<String, String> allStocksMap){
+        return getDistinctStocksToBlocksMap(allStocksMap, null);
+    }
+
+    /**
+     *
+     * @param allStocksMap all stock from east money
+     * @param bcNames bc name for filter purpose
+     * @return
+     */
+    public TreeMap<String, HashSet<String>> getDistinctStocksToBlocksMap(Map<String, String> allStocksMap, TreeSet<String> bcNames){
+        TreeMap<String, HashSet<String>> distinctStockTreeMap = new TreeMap<String, HashSet<String>>();
         for (BK bk: bkList) {
             for (BC bc :bk.getBcList()){
                 if (bcNames != null && !bcNames.contains(bc.getName())){
@@ -34,12 +41,10 @@ public class BlockData {
                 }
                 String fullBKBCName = bk.getName() + "_" + bc.getName();
                 for(String stockId : bc.getStockIds()) {
-                    //System.out.println(fullBKBCName+"["+stockId+"]");
-                    //System.out.println(stockId.substring(2));
                     if (allStocksMap.containsKey(stockId.substring(2))){
-                        TreeSet<String> blocks = distinctStockTreeMap.get(stockId);
+                        HashSet<String> blocks = distinctStockTreeMap.get(stockId);
                         if (blocks == null) {
-                            blocks = new TreeSet<String>();
+                            blocks = new HashSet<String>();
                             distinctStockTreeMap.put(stockId, blocks);
                         }
                         blocks.add(fullBKBCName);
@@ -50,8 +55,26 @@ public class BlockData {
         return distinctStockTreeMap;
     }
 
-    public TreeMap<String, TreeSet<String>> getDistinctStocksToBlocksMap(Map<String, String> allStocksMap){
-        return getDistinctStocksToBlocksMap(allStocksMap, null);
+    /**
+     *
+     * @param allStocksMap all stock from east money
+     * @return  Key is block, value is stocks set
+     */
+    public TreeMap<String, HashSet<String>> getDistinctBlocksToStocksMap(Map<String, String> allStocksMap){
+        TreeMap<String, HashSet<String>> distinctBlockTreeMap = new TreeMap<String, HashSet<String>>();
+        for (BK bk: bkList) {
+            for (BC bc :bk.getBcList()){
+                String fullBKBCName = bk.getName() + "_" + bc.getName();
+                HashSet<String> stocksSet = new HashSet<String>();
+                for(String stockId : bc.getStockIds()) {
+                    if (allStocksMap.containsKey(stockId.substring(2))){
+                        stocksSet.add(stockId);
+                    }
+                }
+                distinctBlockTreeMap.put(fullBKBCName, stocksSet);
+            }
+        }
+        return distinctBlockTreeMap;
     }
 
     public void printBlockData(){
