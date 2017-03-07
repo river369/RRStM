@@ -61,9 +61,9 @@ public class SelectBlockModel {
         });
         // select top
         List<Map.Entry<String, BlockValues>> selectedBlockToStockCountListWithCount = new ArrayList<Map.Entry<String, BlockValues>>();
-        int selectBlockCount = (int)(preSelectedBlockToStockCountList.size() * YiConstants.bestStocksByCountRatio);
+        int selectBlockCount = (int)(preSelectedBlockToStockCountList.size() * YiConstants.bestSelectedStocksByRatio);
         for (int i = 0; i < selectBlockCount; i++) {
-            if (preSelectedBlockToStockCountList.get(i).getValue().getActiveBlockCount() > YiConstants.bestStocksByCountMinCount) {
+            if (preSelectedBlockToStockCountList.get(i).getValue().getActiveBlockCount() > YiConstants.bestSelectedStocksByMinCount) {
                 selectedBlockToStockCountListWithCount.add(preSelectedBlockToStockCountList.get(i));
             }
         }
@@ -76,9 +76,9 @@ public class SelectBlockModel {
                 return o1.getValue().getActiveRatioInBlock() < o2.getValue().getActiveRatioInBlock() ? 1 : -1;
             }
         });
-        selectBlockCount = (int)(selectedBlockToStockCountListWithCount.size() * YiConstants.bestStocksByActiveRatio);
+        selectBlockCount = (int)(selectedBlockToStockCountListWithCount.size() * YiConstants.bestSelectedStocksByActiveRatio);
         for (int i = 0; i < selectBlockCount; i++) {
-            if (selectedBlockToStockCountListWithCount.get(i).getValue().getActiveRatioInBlock() > YiConstants.bestStocksByActiveRatioMin) {
+            if (selectedBlockToStockCountListWithCount.get(i).getValue().getActiveRatioInBlock() > YiConstants.bestSelectedStocksByActiveRatioMin) {
                 selectedBlockToStockCountListWithActiveRatio.add(selectedBlockToStockCountListWithCount.get(i));
             }
         }

@@ -14,7 +14,6 @@ public class SelectFramework {
 
 
     public void run(){
-
         // 1. Load all stocks from website
         long start = System.currentTimeMillis();
         // Read all stocks from website
@@ -31,9 +30,6 @@ public class SelectFramework {
             // 2. select the best blocks base on preselected stocks
             SelectBlockModel selectBlockModel = new SelectBlockModel(allStocksMap);
             List<Map.Entry<String, BlockValues>> topBlockList = selectBlockModel.select();
-//            for (Map.Entry<String, BlockValues> mapping : topBlockList) {
-//                System.out.println(mapping.getKey() + "," + mapping.getValue());
-//            }
 
             // 3. Select the best stocks in the best blocks
             SelectStockModel selectStockModel = new SelectStockModel();

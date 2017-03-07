@@ -9,8 +9,8 @@ package com.yi.realtime;
 
 public class RealTimeData {
     private String timeInSecond;
-    private String id; // 1
-    private String Name; // 2
+    private String id; // 1 stock code
+    private String Name; // 2 stock name
     private float price; // 3价格
     private float change; // 4涨跌额?
     private float range; // 5涨跌幅?
@@ -18,7 +18,7 @@ public class RealTimeData {
     private int tradingNumber; // 7 成交量
     private int tradingValue; // 8 成交金额
     private float yesterdayFinishPrice; // 9 前收盘Price
-    private float todaystartPrice; // 10 今开盘Price
+    private float todayStartPrice; // 10 今开盘Price
     private float maxPrice; //11 今日最高
     private float minPrice; //12 今日最低
     private float fiveminuateChange; //21
@@ -107,12 +107,12 @@ public class RealTimeData {
         this.yesterdayFinishPrice = yesterdayFinishPrice;
     }
 
-    public float getTodaystartPrice() {
-        return todaystartPrice;
+    public float getTodayStartPrice() {
+        return todayStartPrice;
     }
 
-    public void setTodaystartPrice(float todaystartPrice) {
-        this.todaystartPrice = todaystartPrice;
+    public void setTodayStartPrice(float todayStartPrice) {
+        this.todayStartPrice = todayStartPrice;
     }
 
     public float getMaxPrice() {
@@ -176,7 +176,7 @@ public class RealTimeData {
                 ", tradingNumber=" + tradingNumber +
                 ", tradingValue=" + tradingValue +
                 ", yesterdayFinishPrice=" + yesterdayFinishPrice +
-                ", todaystartPrice=" + todaystartPrice +
+                ", todaystartPrice=" + todayStartPrice +
                 ", maxPrice=" + maxPrice +
                 ", minPrice=" + minPrice +
                 ", fiveminuateChange=" + fiveminuateChange +

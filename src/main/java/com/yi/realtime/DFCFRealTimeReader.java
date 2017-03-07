@@ -7,7 +7,9 @@ import com.yi.utils.DateUtils;
 import com.yi.utils.HttpReader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jianguog on 17/2/20.
@@ -21,18 +23,17 @@ public class DFCFRealTimeReader {
             e.printStackTrace();
         }
     }
-    public List<Integer> getDFCFRealTimeData() throws YiException{
+    public Map<String, RealTimeData> getDFCFRealTimeData() throws YiException{
         List<Integer> newsCountList = new ArrayList<Integer>();
         String response = HttpReader.sendGet(YiConstants.dfcfURL,YiConstants.dfcfParameter);
-        parseNewsCountString(response);
+        return parseNewsCountString(response);
         //System.out.println(response);
-        return null;
     }
 
-    public List<RealTimeData> parseNewsCountString(String html) throws YiException {
+    public Map<String, RealTimeData> parseNewsCountString(String html) throws YiException {
         String jsonarra=html.split("rank:")[1].split(",pages")[0];
         String stocks[]=jsonarra.split("\",");
-        List<RealTimeData> stockRealTimeList = new ArrayList<RealTimeData>();
+        Map<String, RealTimeData> stockRealTimeMap = new HashMap<String, RealTimeData>();
         int skipedRows = 0;
         for (int i = 0; i < stocks.length; i++) {
             try {
@@ -49,25 +50,26 @@ public class DFCFRealTimeReader {
                 realTimeData.setTradingNumber(Integer.parseInt(colums[7].replace("%", "")));
                 realTimeData.setTradingValue(Integer.parseInt(colums[8].replace("%", "")));
                 realTimeData.setYesterdayFinishPrice(Float.parseFloat(colums[9]));
-                realTimeData.setTodaystartPrice(Float.parseFloat(colums[10]));
+                realTimeData.setTodayStartPrice(Float.parseFloat(colums[10]));
                 realTimeData.setMaxPrice(Float.parseFloat(colums[11]));
                 realTimeData.setMinPrice(Float.parseFloat(colums[12]));
                 realTimeData.setFiveminuateChange((float) (Float.parseFloat(colums[21].replace("%", "")) * 0.01));
                 realTimeData.setVolumeRatio(Float.parseFloat(colums[22]));
-                realTimeData.setTurnOver(Float.parseFloat(colums[23]));
+                realTimeData.setTurnOver((float) (Float.parseFloat(colums[23])* 0.01));
                 realTimeData.setPe(Float.parseFloat(colums[24]));
-                stockRealTimeList.add(realTimeData);
-                System.out.println(row);
-                System.out.println(realTimeData);
+                stockRealTimeMap.put(realTimeData.getId(), realTimeData);
+                //System.out.println(row);
+                //System.out.println(realTimeData);
             } catch (NumberFormatException e) {
                 skipedRows++;
             }
         }
-        System.out.println(skipedRows + " rows are skipped.");
+        //System.out.println(skipedRows + " rows are skipped.");
         //System.out.println(stockRealTimeList.size());
-        if (stockRealTimeList.size() <= YiConstants.minDFCFRealTimeStockCount) {
+        if (stockRealTimeMap.size() <= YiConstants.minDFCFRealTimeStockCount ||
+                skipedRows >= YiConstants.maxDFCFRealTimeStockSkipCount) {
             throw new YiException(ExceptionHandler.DFCF_REAL_TIME_STOCKS_COUNT_TOO_LOW);
         }
-        return stockRealTimeList;
+        return stockRealTimeMap;
     }
 }
