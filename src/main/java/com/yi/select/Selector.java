@@ -3,6 +3,8 @@ package com.yi.select;
 import com.yi.YiConstants;
 import com.yi.blocks.BlockData;
 import com.yi.blocks.BlockInfoReader;
+import com.yi.exception.ExceptionHandler;
+import com.yi.exception.YiException;
 import com.yi.stocks.AllStocksReader;
 
 import java.util.*;
@@ -29,33 +31,38 @@ public class Selector {
         // Read all stocks from website
         AllStocksReader allStocksReader = new AllStocksReader();
         allStocksMap = allStocksReader.getStocksMap();
-        //System.out.println(System.currentTimeMillis() - start);
-
-        // read common stock-block mapping from local static file
-        BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
-        BlockData commonBlockData = commonBlockInfoReader.getBlockData();
-        commonStocksToBlocksMap = commonBlockData.getDistinctStocksToBlocksMap(allStocksMap);
-        commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);
-
-        // Select top blocks base on filter files
-        List<Map.Entry<String, BlockValues>> topBlockList = selectTopBlocksList();
-        for (Map.Entry<String, BlockValues> mapping : topBlockList) {
-            System.out.println(mapping.getKey() + "," + mapping.getValue().getActiveBlockCount()
-                            + "," + mapping.getValue().getAllBlockCount()
-                            + "," + mapping.getValue().getActiveRatioInBlock());
+        if (allStocksMap.size() < 3000) {
+            System.out.println("Exit since stock size is abnormal. The value is " + allStocksMap.size());
+            System.exit(-1000);
         }
+        //System.out.println(System.currentTimeMillis() - start);
+        try {
+            // read common stock-block mapping from local static file
+            BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
+            BlockData commonBlockData = commonBlockInfoReader.getBlockData();
+            commonStocksToBlocksMap = commonBlockData.getDistinctStocksToBlocksMap(allStocksMap);
+            commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);
+
+            // Select top blocks base on filter files
+            List<Map.Entry<String, BlockValues>> topBlockList = selectTopBlocksList();
+            for (Map.Entry<String, BlockValues> mapping : topBlockList) {
+                System.out.println(mapping.getKey() + "," + mapping.getValue().getActiveBlockCount()
+                        + "," + mapping.getValue().getAllBlockCount()
+                        + "," + mapping.getValue().getActiveRatioInBlock());
+            }
+        } catch (YiException e) {
+            ExceptionHandler.HandleException(e);
+        }
+
     }
 
     /**
      *
      * @return key is block name, value is active stock quantity
      */
-    List<Map.Entry<String, BlockValues>> selectTopBlocksList(){
+    List<Map.Entry<String, BlockValues>> selectTopBlocksList() throws YiException {
         //1. get the block map with block name as key and related stock count as value
         HashMap<String, BlockValues> preSelectedBlockToStockCountMap = selectBlocksListWithPreSelectedStocks();
-//        for (String block : preSelectedBlockToStockCountMap.keySet()){
-//            System.out.println(block + "-"  + preSelectedBlockToStockCountMap.get(block).getActiveBlockCount());
-//        }
 
         //2. select the top 10% item and stock count should be greate than 2
         // sort the map to list, //降序排序
@@ -89,6 +96,13 @@ public class Selector {
                 selectedBlockToStockCountListWithActiveRatio.add(selectedBlockToStockCountListWithCount.get(i));
             }
         }
+
+        // 4. Validation
+        // set to 0 now. if stock is less than PRE_SELECTED_STOCKS_TOO_LITTLE
+        if (selectedBlockToStockCountListWithActiveRatio.size() <= YiConstants.minSelectedBlockCount) {
+            throw new YiException(ExceptionHandler.SELECTED_BLOCKS_TOO_LITTLE);
+        }
+
         return selectedBlockToStockCountListWithActiveRatio;
     }
 
@@ -96,7 +110,7 @@ public class Selector {
      * get the block map with block name as key and related stock count as value
      * @return key is block name, value is active stock quantity
      */
-    HashMap<String, BlockValues> selectBlocksListWithPreSelectedStocks(){
+    HashMap<String, BlockValues> selectBlocksListWithPreSelectedStocks() throws YiException {
         BlockInfoReader preSelectedBlockInfoReader = new BlockInfoReader(YiConstants.preSelectedBlockFileString);
         BlockData preSelectedBlockData = preSelectedBlockInfoReader.getBlockData();
         TreeSet<String> bcNames = new TreeSet<String>();
@@ -104,6 +118,14 @@ public class Selector {
         bcNames.add(YiConstants.followIncrease);
         // Key is stock name, values are not matter at all
         TreeMap<String, HashSet<String>> preSelectedStocksToBlocksMap= preSelectedBlockData.getDistinctStocksToBlocksMap(allStocksMap, bcNames);
+        // set to 0
+        if (preSelectedStocksToBlocksMap.size() <= YiConstants.minTechValidePreSelectedBlockCount) {
+            throw new YiException(ExceptionHandler.WAITING_SELECT_STOCKS_FILE);
+        }
+        // set to 10 now. if stock is less than PRE_SELECTED_STOCKS_TOO_LITTLE
+        if (preSelectedStocksToBlocksMap.size() <= YiConstants.minValidPreSelectedStockCount) {
+            throw new YiException(ExceptionHandler.PRE_SELECTED_STOCKS_TOO_LITTLE);
+        }
 
         //Key is block name, Values are the stocks count that the block contains
         HashMap<String, BlockValues> preSelectedBlockToStockCountMap = new HashMap<String, BlockValues>();
@@ -123,6 +145,10 @@ public class Selector {
                 }
 
             }
+        }
+        // set to 2 now. if stock is less than PRE_SELECTED_STOCKS_TOO_LITTLE
+        if (preSelectedBlockToStockCountMap.size() <= YiConstants.minValidPreSelectedBlockCount) {
+            throw new YiException(ExceptionHandler.PRE_SELECTED_BLOCKS_TOO_LITTLE);
         }
         return preSelectedBlockToStockCountMap;
     }

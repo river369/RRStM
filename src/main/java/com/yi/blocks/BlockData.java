@@ -1,5 +1,9 @@
 package com.yi.blocks;
 
+import com.yi.YiConstants;
+import com.yi.exception.ExceptionHandler;
+import com.yi.exception.YiException;
+
 import java.util.*;
 
 /**
@@ -21,7 +25,7 @@ public class BlockData {
      * @param allStocksMap all stock from east money
      * @return  Key is stock, value is blocks set
      */
-    public TreeMap<String, HashSet<String>> getDistinctStocksToBlocksMap(Map<String, String> allStocksMap){
+    public TreeMap<String, HashSet<String>> getDistinctStocksToBlocksMap(Map<String, String> allStocksMap) throws YiException {
         return getDistinctStocksToBlocksMap(allStocksMap, null);
     }
 
@@ -31,7 +35,8 @@ public class BlockData {
      * @param bcNames bc name for filter purpose
      * @return
      */
-    public TreeMap<String, HashSet<String>> getDistinctStocksToBlocksMap(Map<String, String> allStocksMap, TreeSet<String> bcNames){
+    public TreeMap<String, HashSet<String>> getDistinctStocksToBlocksMap(Map<String, String> allStocksMap, TreeSet<String> bcNames)
+            throws YiException {
         TreeMap<String, HashSet<String>> distinctStockTreeMap = new TreeMap<String, HashSet<String>>();
         for (BK bk: bkList) {
             for (BC bc :bk.getBcList()){
@@ -52,6 +57,10 @@ public class BlockData {
                 }
             }
         }
+        if (bcNames == null && distinctStockTreeMap.size() < YiConstants.minCommonStockCount) {
+            System.out.println(ExceptionHandler.SYSTEM_BLOCK_INFO_STOCKS_COUNT_TOO_LOW + " The value is " + distinctStockTreeMap.size());
+            throw new YiException(ExceptionHandler.SYSTEM_BLOCK_INFO_STOCKS_COUNT_TOO_LOW);
+        }
         return distinctStockTreeMap;
     }
 
@@ -60,7 +69,7 @@ public class BlockData {
      * @param allStocksMap all stock from east money
      * @return  Key is block, value is stocks set
      */
-    public TreeMap<String, HashSet<String>> getDistinctBlocksToStocksMap(Map<String, String> allStocksMap){
+    public TreeMap<String, HashSet<String>> getDistinctBlocksToStocksMap(Map<String, String> allStocksMap) throws YiException {
         TreeMap<String, HashSet<String>> distinctBlockTreeMap = new TreeMap<String, HashSet<String>>();
         for (BK bk: bkList) {
             for (BC bc :bk.getBcList()){
@@ -73,6 +82,10 @@ public class BlockData {
                 }
                 distinctBlockTreeMap.put(fullBKBCName, stocksSet);
             }
+        }
+        if (distinctBlockTreeMap.size() < YiConstants.minCommonBlockCount) {
+            System.out.println(ExceptionHandler.SYSTEM_BLOCK_INFO_BLOCKS_COUNT_TOO_LOW + " The value is " + distinctBlockTreeMap.size());
+            throw new YiException(ExceptionHandler.SYSTEM_BLOCK_INFO_BLOCKS_COUNT_TOO_LOW);
         }
         return distinctBlockTreeMap;
     }

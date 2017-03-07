@@ -14,10 +14,20 @@ public class YiConstants {
     public static String majorIncrease = "MIDD主升.";
     public static String followIncrease = "股池2：量单.";
 
-    public static double bestStocksByCountRatio = 0.1;
+    // Stock select parameter
+    public static int minValidPreSelectedStockCount = 10;
+    public static int minValidPreSelectedBlockCount = 2;
+    public static int minSelectedBlockCount = 0;
+    public static double bestStocksByCountRatio = 0.1; //better than other 10%, top 90%
     public static double bestStocksByCountMinCount = 2;
-    public static double bestStocksByActiveRatio = 0.6;
+    public static double bestStocksByActiveRatio = 0.6; //better than other 40%, top 60%
     public static double bestStocksByActiveRatioMin = 0.2;
+
+    // Monitor threshhold
+    public static int minCommonStockCount = 2000;
+    public static int minCommonBlockCount = 150;
+    public static int minTechValidePreSelectedBlockCount = 0;
+    public static int minDFCFRealTimeStockCount = 1000;
 
     // realtime data from dfcf
     public static String dfcfURL = "http://nufm.dfcfw.com/EM_Finance2014NumericApplication/JS.aspx";
@@ -29,6 +39,4 @@ public class YiConstants {
     public static String newsCountsFile = YiConstants.newsCountsFilePrefix + DateUtils.getTodayString() + ".txt";
     public static String sinaSearchURL = "http://search.sina.com.cn/";
     public static String eastMoneyUrl = "http://quote.eastmoney.com/stocklist.html";
-
-
 }
