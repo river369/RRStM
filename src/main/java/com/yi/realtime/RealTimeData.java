@@ -1,11 +1,9 @@
 package com.yi.realtime;
 
 /**
- * 
  *
- * 2,000001,平安银行,9.56,0.17,1.81%,1.92,898755,855710800,9.39,9.40,9.58,9.40,-,-,-,-,-,-,-,-,0.10%,-,0.53,6.58
- * 2,002687,乔治白,11.30,-0.15,-1.31%,2.27,44054,49377860,11.45,11.36,11.40,11.14,-,-,-,-,-,-,-,-,0.62%,-,1.38,70.63
- * 1,603990,麦迪科技,47.79,-1.29,-2.63%,5.24,7739,36928544,49.08,48.76,49.08,46.51,-,-,-,-,-,-,-,-,0.19%,-,3.87,184.61
+ * 1,603999,读者传媒,29.58,-0.09,-0.30%,1.18,16191,48065415,29.67,29.71,29.88,29.53,-,-,-,-,-,-,-,-,-0.03%,0.60,1.41,102.58
+ * RealTimeData{timeInSecond='2017-03-07_12:02:06', id='603999', Name='读者传媒', price=29.58, change=-0.09, range=-0.003, amplitude=0.0117999995, tradingNumber=16191, tradingValue=48065415, yesterdayFinishPrice=29.67, todaystartPrice=29.71, maxPrice=29.88, minPrice=29.53, fiveminuateChange=-2.9999999E-4, volumeRatio=0.6, turnOver=1.41, pe=102.58}
  *
  */
 
@@ -17,15 +15,16 @@ public class RealTimeData {
     private float change; // 4涨跌额?
     private float range; // 5涨跌幅?
     private float amplitude; //6振幅??
-    private int tradingNumber; // 7??
-    private int tradingValue; // 8??
+    private int tradingNumber; // 7 成交量
+    private int tradingValue; // 8 成交金额
     private float yesterdayFinishPrice; // 9 前收盘Price
     private float todaystartPrice; // 10 今开盘Price
-    private float maxPrice; //11
-    private float minPrice; //12
+    private float maxPrice; //11 今日最高
+    private float minPrice; //12 今日最低
     private float fiveminuateChange; //21
-    private float volumeRatio; //23 量比
-    private float turnOver; //24 换手
+    private float volumeRatio; //22 量比
+    private float turnOver; //23 换手
+    private float pe; //24 PE(动)
 
 
     public String getTimeInSecond() {
@@ -154,6 +153,37 @@ public class RealTimeData {
 
     public void setTurnOver(float turnOver) {
         this.turnOver = turnOver;
+    }
+
+    public float getPe() {
+        return pe;
+    }
+
+    public void setPe(float pe) {
+        this.pe = pe;
+    }
+
+    @Override
+    public String toString() {
+        return "RealTimeData{" +
+                "timeInSecond='" + timeInSecond + '\'' +
+                ", id='" + id + '\'' +
+                ", Name='" + Name + '\'' +
+                ", price=" + price +
+                ", change=" + change +
+                ", range=" + range +
+                ", amplitude=" + amplitude +
+                ", tradingNumber=" + tradingNumber +
+                ", tradingValue=" + tradingValue +
+                ", yesterdayFinishPrice=" + yesterdayFinishPrice +
+                ", todaystartPrice=" + todaystartPrice +
+                ", maxPrice=" + maxPrice +
+                ", minPrice=" + minPrice +
+                ", fiveminuateChange=" + fiveminuateChange +
+                ", volumeRatio=" + volumeRatio +
+                ", turnOver=" + turnOver +
+                ", pe=" + pe +
+                '}';
     }
 }
 

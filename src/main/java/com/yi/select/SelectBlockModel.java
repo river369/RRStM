@@ -12,8 +12,7 @@ import java.util.*;
 /**
  * Created by jianguog on 17/3/5.
  */
-public class Selector {
-
+public class SelectBlockModel {
     // key is stock code, value is stock name
     Map<String, String> allStocksMap;
     // Key is stock name, values are the blocks that contain the stock
@@ -21,39 +20,26 @@ public class Selector {
     // Key is block name, values are stocks that belong to the block
     TreeMap<String, HashSet<String>> commonBlocksToStocksMap;
 
-    public static void main(String[] args) {
-        Selector selector = new Selector();
-        selector.select();
+    public SelectBlockModel(Map<String, String> allStocksMap) {
+        this.allStocksMap = allStocksMap;
     }
 
-    public void select(){
-        long start = System.currentTimeMillis();
-        // Read all stocks from website
-        AllStocksReader allStocksReader = new AllStocksReader();
-        allStocksMap = allStocksReader.getStocksMap();
-        if (allStocksMap.size() < 3000) {
-            System.out.println("Exit since stock size is abnormal. The value is " + allStocksMap.size());
-            System.exit(-1000);
-        }
-        //System.out.println(System.currentTimeMillis() - start);
-        try {
-            // read common stock-block mapping from local static file
-            BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
-            BlockData commonBlockData = commonBlockInfoReader.getBlockData();
-            commonStocksToBlocksMap = commonBlockData.getDistinctStocksToBlocksMap(allStocksMap);
-            commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);
+    public List<Map.Entry<String, BlockValues>> select() throws YiException{
 
-            // Select top blocks base on filter files
-            List<Map.Entry<String, BlockValues>> topBlockList = selectTopBlocksList();
-            for (Map.Entry<String, BlockValues> mapping : topBlockList) {
-                System.out.println(mapping.getKey() + "," + mapping.getValue().getActiveBlockCount()
-                        + "," + mapping.getValue().getAllBlockCount()
-                        + "," + mapping.getValue().getActiveRatioInBlock());
-            }
-        } catch (YiException e) {
-            ExceptionHandler.HandleException(e);
+        // read common stock-block mapping from local static file
+        BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
+        BlockData commonBlockData = commonBlockInfoReader.getBlockData();
+        commonStocksToBlocksMap = commonBlockData.getDistinctStocksToBlocksMap(allStocksMap);
+        commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);
+
+        // Select top blocks base on filter files
+        List<Map.Entry<String, BlockValues>> topBlockList = selectTopBlocksList();
+        for (Map.Entry<String, BlockValues> mapping : topBlockList) {
+            mapping.getValue().setStocksSet(commonBlocksToStocksMap.get(mapping.getKey()));
+            //System.out.println(mapping.getKey() + "," + mapping.getValue());
         }
 
+        return topBlockList;
     }
 
     /**
@@ -153,4 +139,13 @@ public class Selector {
         return preSelectedBlockToStockCountMap;
     }
 
+    public static void main(String[] args) {
+        AllStocksReader allStocksReader = new AllStocksReader();
+        SelectBlockModel selectBlockModel = new SelectBlockModel(allStocksReader.getStocksMap());
+        try {
+            selectBlockModel.select();
+        } catch (YiException e) {
+            e.printStackTrace();
+        }
+    }
 }

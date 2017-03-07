@@ -37,7 +37,6 @@ public class DFCFRealTimeReader {
         for (int i = 0; i < stocks.length; i++) {
             try {
                 String row = stocks[i].replace("[\"", "").replace("\"", "").replace("]", "");
-                //System.out.println(row);
                 String[] colums = row.split(",");
                 RealTimeData realTimeData = new RealTimeData();
                 realTimeData.setTimeInSecond(DateUtils.getCurrentTimeToSecondString());
@@ -54,9 +53,12 @@ public class DFCFRealTimeReader {
                 realTimeData.setMaxPrice(Float.parseFloat(colums[11]));
                 realTimeData.setMinPrice(Float.parseFloat(colums[12]));
                 realTimeData.setFiveminuateChange((float) (Float.parseFloat(colums[21].replace("%", "")) * 0.01));
-                realTimeData.setVolumeRatio(Float.parseFloat(colums[23]));
-                realTimeData.setTurnOver(Float.parseFloat(colums[24]));
+                realTimeData.setVolumeRatio(Float.parseFloat(colums[22]));
+                realTimeData.setTurnOver(Float.parseFloat(colums[23]));
+                realTimeData.setPe(Float.parseFloat(colums[24]));
                 stockRealTimeList.add(realTimeData);
+                System.out.println(row);
+                System.out.println(realTimeData);
             } catch (NumberFormatException e) {
                 skipedRows++;
             }
