@@ -7,10 +7,13 @@ import com.yi.utils.DateUtils;
  */
 public class YiConstants {
     // local files and fitler from kt 交易师
-    //public static String blockInfoFileString = "/Users/jianguog/other/yistock/SystemBlockInfo.new.txt";
     public static String blockInfoFileString = "/Users/jianguog/other/yistock/SystemBlockInfo.txt";
-    //public static String blockInfoFileWithFilterString = "/Users/jianguog/other/yistock/UserBlockInfo.txt";
     public static String preSelectedBlockFileString = "/Users/jianguog/other/yistock/UserBlockInfo-orig.txt";
+
+    public static String localBlockInfoFileString = "SystemBlockInfo.data";
+    public static String localPreSelectedBlockFileString = "UserBlockInfo1390944714278353.data";
+
+
     public static String majorIncrease = "MIDD主升.";
     public static String followIncrease = "股池2：量单.";
 
