@@ -48,14 +48,15 @@ public class UploadKTFiles {
         }
         return path;
     }
+
     public void upload(File file) {
         OSSUtil.upload(file);
-        try {
-            String content = FileUtils.readFileToString(file, "UTF-16");
-            //System.out.println("[" + content + "]");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            String content = FileUtils.readFileToString(file, "UTF-16");
+//            //System.out.println("[" + content + "]");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

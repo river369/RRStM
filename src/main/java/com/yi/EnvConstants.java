@@ -7,8 +7,8 @@ import com.yi.utils.DateUtils;
  */
 public class EnvConstants {
     public static String OSS_BASE_URL = "http://oss.clcentury.com/";
-    public static String OSS_UPLOAD_URL = "http://clcentury.oss-cn-beijing.aliyuncs.com/";
-    public static String OSS_CLCENTURY_BUCKET = "clcentury";
-    public static String OSS_PIC_OBJ_PREFIX = "yzphoto/pics/";
+    public static String OSS_UPLOAD_URL = "http://oss-cn-beijing.aliyuncs.com/";
+    public static String OSS_AISTOCKYI_BUCKET = "aistockyi";
+    public static String OSS_KT_PREFIX = "kt/";
+    public static String OSS_KT_HISTORY_PREFIX = "kthistory/";
     
-}
