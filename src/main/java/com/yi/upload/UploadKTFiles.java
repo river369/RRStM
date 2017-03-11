@@ -1,20 +1,17 @@
 package com.yi.upload;
 
-import com.aliyun.oss.model.PutObjectRequest;
 import com.yi.EnvConstants;
 import com.yi.YiConstants;
 import com.yi.utils.DateUtils;
 import com.yi.utils.OSSUtil;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by jianguog on 17/3/7.
  */
 public class UploadKTFiles {
-    String[] filesToUpload = {YiConstants.localPreSelectedBlockFileString, YiConstants.localBlockInfoFileString};
+    String[] filesToUpload = {YiConstants.localPreSelectedBlockFileName, YiConstants.localBlockInfoFileName};
     long[] filesLength = new long[2];
 
     public static void main(String[] args) {
@@ -32,8 +29,8 @@ public class UploadKTFiles {
     public void run() {
         System.out.println("Upload Check at " + DateUtils.getCurrentTimeToSecondString());
         for (int i = 0; i < filesToUpload.length; i++) {
-            String path = getPath();
-            File file = new File(path + filesToUpload[i]);
+            String ktPath = YiConstants.getKTPath();
+            File file = new File(ktPath + filesToUpload[i]);
             if (file.exists()) {
                 long fileLength = file.length();
                 if (fileLength == filesLength[i]) {
@@ -46,14 +43,6 @@ public class UploadKTFiles {
                 System.out.println("File " + file.getAbsolutePath() + " doesn't exist.");
             }
         }
-    }
-    public String getPath() {
-        String path = "D:\\KT\\User\\BlockInfo\\";
-        String os = System.getProperty("os.name");
-        if(os.toLowerCase().startsWith("mac")){
-            path = "/Users/jianguog/other/yistock/";
-        }
-        return path;
     }
 
     public void upload(File file) {

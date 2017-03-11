@@ -3,9 +3,7 @@ package com.yi.select;
 import com.yi.YiConstants;
 import com.yi.blocks.BlockData;
 import com.yi.blocks.BlockInfoReader;
-import com.yi.exception.ExceptionHandler;
 import com.yi.exception.YiException;
-import com.yi.stocks.AllStocksReader;
 
 import java.util.*;
 
@@ -22,7 +20,7 @@ public class SelectModel {
      */
     public List<StockOutput> select(Map<String, String> allStocksMap ) throws YiException {
         // 0 Build common data. read common stock-block mapping from local static file
-        BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
+        BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.getSelectorPath() + YiConstants.localBlockInfoFileName);
         BlockData commonBlockData = commonBlockInfoReader.getBlockData();
         TreeMap<String, HashSet<String>> commonStocksToBlocksMap = commonBlockData.getDistinctStocksToBlocksMap(allStocksMap);
         TreeMap<String, HashSet<String>> commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);

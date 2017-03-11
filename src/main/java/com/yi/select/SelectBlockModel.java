@@ -95,7 +95,7 @@ public class SelectBlockModel {
      * @return key is block name, value is active stock quantity
      */
     HashMap<String, BlockValues> selectBlocksListWithPreSelectedStocks() throws YiException {
-        BlockInfoReader preSelectedBlockInfoReader = new BlockInfoReader(YiConstants.preSelectedBlockFileString);
+        BlockInfoReader preSelectedBlockInfoReader = new BlockInfoReader(YiConstants.getSelectorPath() + YiConstants.localPreSelectedBlockFileName);
         BlockData preSelectedBlockData = preSelectedBlockInfoReader.getBlockData();
         TreeSet<String> bcNames = new TreeSet<String>();
         bcNames.add(YiConstants.majorIncrease);
@@ -141,7 +141,7 @@ public class SelectBlockModel {
         AllStocksReader allStocksReader = new AllStocksReader();
         Map<String, String> allStocksMap = allStocksReader.getStocksMap();
         try {
-            BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
+            BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.getSelectorPath() + YiConstants.localBlockInfoFileName);
             BlockData commonBlockData = commonBlockInfoReader.getBlockData();
             TreeMap<String, HashSet<String>> commonStocksToBlocksMap = commonBlockData.getDistinctStocksToBlocksMap(allStocksMap);
             TreeMap<String, HashSet<String>> commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);

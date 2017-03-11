@@ -6,8 +6,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.Map;
-
 /**
  * Created by jianguog on 17/2/18.
  */
@@ -55,7 +53,7 @@ public class BlockInfoReader {
     }
 
     public static void main(String[] args) {
-        BlockInfoReader blockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
+        BlockInfoReader blockInfoReader = new BlockInfoReader(YiConstants.getSelectorPath() + YiConstants.localBlockInfoFileName);
         blockInfoReader.getBlockData().printBlockData();
     }
 

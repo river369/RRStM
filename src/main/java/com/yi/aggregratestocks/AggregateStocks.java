@@ -20,7 +20,7 @@ public class AggregateStocks {
     }
 
     public TreeMap<String, DistinctStock> buildDistinctStocks(){
-        BlockInfoReader blockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
+        BlockInfoReader blockInfoReader = new BlockInfoReader(YiConstants.getSelectorPath() + YiConstants.localBlockInfoFileName);
         BlockData blockData = blockInfoReader.getBlockData();
         //blockData.printBlockData();
         TreeMap<String, DistinctStock> distinctStockTreeMap = new TreeMap<String, DistinctStock>();

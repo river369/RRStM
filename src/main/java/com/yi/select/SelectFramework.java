@@ -1,9 +1,13 @@
 package com.yi.select;
 
+import com.yi.EnvConstants;
+import com.yi.YiConstants;
 import com.yi.exception.ExceptionHandler;
 import com.yi.exception.YiException;
 import com.yi.stocks.AllStocksReader;
+import com.yi.utils.OSSUtil;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +32,7 @@ public class SelectFramework {
 
         try {
             // 2. select the best blocks
+            getPreselectedFiles();
             SelectModel selectModel = new SelectModel();
             List<StockOutput>  selectedStockList = selectModel.select(allStocksMap);
             for (StockOutput stockOutput : selectedStockList) {
@@ -37,6 +42,23 @@ public class SelectFramework {
         } catch (YiException e) {
             ExceptionHandler.HandleException(e);
         }
+    }
+
+    void getPreselectedFiles(){
+        String[] filesToDownLoad = {YiConstants.localPreSelectedBlockFileName, YiConstants.localBlockInfoFileName};
+        for (String fileName : filesToDownLoad ) {
+            String ossKey = EnvConstants.OSS_KT_PREFIX + fileName;
+            while (! OSSUtil.exist(ossKey) ) {
+                try {
+                    System.out.println("Cannot fine OSS file " + ossKey);
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            OSSUtil.getObject(ossKey, new File(YiConstants.getSelectorPath() + fileName ));
+        }
+
     }
 
     public static void main(String[] args) {

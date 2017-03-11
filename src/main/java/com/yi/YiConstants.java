@@ -6,13 +6,27 @@ import com.yi.utils.DateUtils;
  * Created by jianguog on 17/2/18.
  */
 public class YiConstants {
+    public static String localBlockInfoFileName = "SystemBlockInfo.data";
+    public static String localPreSelectedBlockFileName = "UserBlockInfo1390944714278353.data";
+
+    // service files path
+    public static String getSelectorPath() {
+        String path = "/home/stock/input/";
+        String os = System.getProperty("os.name");
+        if(os.toLowerCase().startsWith("mac")){
+            path = "/Users/jianguog/other/yistock/server/";
+        }
+        return path;
+    }
     // local files and fitler from kt 交易师
-    public static String blockInfoFileString = "/Users/jianguog/other/yistock/SystemBlockInfo.txt";
-    public static String preSelectedBlockFileString = "/Users/jianguog/other/yistock/UserBlockInfo-orig.txt";
-
-    public static String localBlockInfoFileString = "SystemBlockInfo.data";
-    public static String localPreSelectedBlockFileString = "UserBlockInfo1390944714278353.data";
-
+    public static String getKTPath() {
+        String path = "D:\\KT\\User\\BlockInfo\\";
+        String os = System.getProperty("os.name");
+        if(os.toLowerCase().startsWith("mac")){
+            path = "/Users/jianguog/other/yistock/";
+        }
+        return path;
+    }
 
     public static String majorIncrease = "MIDD主升.";
     public static String followIncrease = "股池2：量单.";
