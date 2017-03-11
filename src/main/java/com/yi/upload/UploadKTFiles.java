@@ -1,6 +1,9 @@
 package com.yi.upload;
 
+import com.aliyun.oss.model.PutObjectRequest;
+import com.yi.EnvConstants;
 import com.yi.YiConstants;
+import com.yi.utils.DateUtils;
 import com.yi.utils.OSSUtil;
 import org.apache.commons.io.FileUtils;
 
@@ -11,7 +14,7 @@ import java.io.IOException;
  * Created by jianguog on 17/3/7.
  */
 public class UploadKTFiles {
-    String[] filesToUpload = {YiConstants.localBlockInfoFileString, YiConstants.localPreSelectedBlockFileString};
+    String[] filesToUpload = {YiConstants.localPreSelectedBlockFileString, YiConstants.localBlockInfoFileString};
     long[] filesLength = new long[2];
 
     public static void main(String[] args) {
@@ -27,16 +30,20 @@ public class UploadKTFiles {
 
     }
     public void run() {
+        System.out.println("Upload Check at " + DateUtils.getCurrentTimeToSecondString());
         for (int i = 0; i < filesToUpload.length; i++) {
             String path = getPath();
             File file = new File(path + filesToUpload[i]);
-            long fileLength = file.length();
-            if (fileLength == filesLength[i]){
-                System.out.println("skip this upload...");
+            if (file.exists()) {
+                long fileLength = file.length();
+                if (fileLength == filesLength[i]) {
+                    System.out.println("skip this upload file " + file.getAbsolutePath() + " since no change found.");
+                } else {
+                    filesLength[i] = fileLength;
+                    upload(file);
+                }
             } else {
-                System.out.println("upload " + file.getAbsolutePath());
-                filesLength[i] = fileLength;
-                upload(file);
+                System.out.println("File " + file.getAbsolutePath() + " doesn't exist.");
             }
         }
     }
@@ -50,7 +57,9 @@ public class UploadKTFiles {
     }
 
     public void upload(File file) {
-        OSSUtil.upload(file);
+        System.out.println("Uploading file " + file.getAbsolutePath() + " to " +  EnvConstants.OSS_KT_PREFIX );
+        OSSUtil.upload(file, EnvConstants.OSS_KT_PREFIX + file.getName());
+        OSSUtil.upload(file, EnvConstants.OSS_KT_HISTORY_PREFIX + file.getName() + "_" + DateUtils.getCurrentTimeToSecondString());
 //        try {
 //            String content = FileUtils.readFileToString(file, "UTF-16");
 //            //System.out.println("[" + content + "]");

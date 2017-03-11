@@ -11,4 +11,3 @@ public class EnvConstants {
     public static String OSS_AISTOCKYI_BUCKET = "aistockyi";
     public static String OSS_KT_PREFIX = "kt/";
     public static String OSS_KT_HISTORY_PREFIX = "kthistory/";
-    
