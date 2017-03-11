@@ -27,13 +27,13 @@ public class SelectFramework {
         //System.out.println(System.currentTimeMillis() - start);
 
         try {
-            // 2. select the best blocks base on preselected stocks
-            SelectBlockModel selectBlockModel = new SelectBlockModel(allStocksMap);
-            List<Map.Entry<String, BlockValues>> topBlockList = selectBlockModel.select();
+            // 2. select the best blocks
+            SelectModel selectModel = new SelectModel();
+            List<StockOutput>  selectedStockList = selectModel.select(allStocksMap);
+            for (StockOutput stockOutput : selectedStockList) {
+                System.out.println(stockOutput);
+            }
 
-            // 3. Select the best stocks in the best blocks
-            SelectStockModel selectStockModel = new SelectStockModel();
-            selectStockModel.select(topBlockList);
         } catch (YiException e) {
             ExceptionHandler.HandleException(e);
         }

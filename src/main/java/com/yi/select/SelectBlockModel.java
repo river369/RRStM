@@ -20,17 +20,15 @@ public class SelectBlockModel {
     // Key is block name, values are stocks that belong to the block
     TreeMap<String, HashSet<String>> commonBlocksToStocksMap;
 
-    public SelectBlockModel(Map<String, String> allStocksMap) {
+    public SelectBlockModel(Map<String, String> allStocksMap,
+                            TreeMap<String, HashSet<String>> commonStocksToBlocksMap,
+                            TreeMap<String, HashSet<String>> commonBlocksToStocksMap) {
         this.allStocksMap = allStocksMap;
+        this.commonStocksToBlocksMap = commonStocksToBlocksMap;
+        this.commonBlocksToStocksMap = commonBlocksToStocksMap;
     }
 
     public List<Map.Entry<String, BlockValues>> select() throws YiException{
-
-        // read common stock-block mapping from local static file
-        BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
-        BlockData commonBlockData = commonBlockInfoReader.getBlockData();
-        commonStocksToBlocksMap = commonBlockData.getDistinctStocksToBlocksMap(allStocksMap);
-        commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);
 
         // Select top blocks base on filter files
         List<Map.Entry<String, BlockValues>> topBlockList = selectTopBlocksList();
@@ -50,7 +48,7 @@ public class SelectBlockModel {
         //1. get the block map with block name as key and related stock count as value
         HashMap<String, BlockValues> preSelectedBlockToStockCountMap = selectBlocksListWithPreSelectedStocks();
 
-        //2. select the top 10% item and stock count should be greate than 2
+        //2. select the top 10% item and stock count should be greater than 2
         // sort the map to list, //降序排序
         List<Map.Entry<String, BlockValues>> preSelectedBlockToStockCountList =
                 new ArrayList<Map.Entry<String, BlockValues>>(preSelectedBlockToStockCountMap.entrySet());
@@ -59,7 +57,7 @@ public class SelectBlockModel {
                 return o1.getValue().getActiveBlockCount() < o2.getValue().getActiveBlockCount() ? 1 : -1;
             }
         });
-        // select top
+        // select top bestSelectedStocksByRatio 10 percent now, and bestSelectedStocksByMinCount is 2
         List<Map.Entry<String, BlockValues>> selectedBlockToStockCountListWithCount = new ArrayList<Map.Entry<String, BlockValues>>();
         int selectBlockCount = (int)(preSelectedBlockToStockCountList.size() * YiConstants.bestSelectedStocksByRatio);
         for (int i = 0; i < selectBlockCount; i++) {
@@ -104,11 +102,11 @@ public class SelectBlockModel {
         bcNames.add(YiConstants.followIncrease);
         // Key is stock name, values are not matter at all
         TreeMap<String, HashSet<String>> preSelectedStocksToBlocksMap= preSelectedBlockData.getDistinctStocksToBlocksMap(allStocksMap, bcNames);
-        // set to 0
+        // minTechValidePreSelectedBlockCount is to 0 now
         if (preSelectedStocksToBlocksMap.size() <= YiConstants.minTechValidePreSelectedBlockCount) {
             throw new YiException(ExceptionHandler.WAITING_SELECT_STOCKS_FILE);
         }
-        // set to 10 now. if stock is less than PRE_SELECTED_STOCKS_TOO_LITTLE
+        // minValidPreSelectedStockCount is set to 10 now. if stock is less than PRE_SELECTED_STOCKS_TOO_LITTLE
         if (preSelectedStocksToBlocksMap.size() <= YiConstants.minValidPreSelectedStockCount) {
             throw new YiException(ExceptionHandler.PRE_SELECTED_STOCKS_TOO_LITTLE);
         }
@@ -141,8 +139,13 @@ public class SelectBlockModel {
 
     public static void main(String[] args) {
         AllStocksReader allStocksReader = new AllStocksReader();
-        SelectBlockModel selectBlockModel = new SelectBlockModel(allStocksReader.getStocksMap());
+        Map<String, String> allStocksMap = allStocksReader.getStocksMap();
         try {
+            BlockInfoReader commonBlockInfoReader = new BlockInfoReader(YiConstants.blockInfoFileString);
+            BlockData commonBlockData = commonBlockInfoReader.getBlockData();
+            TreeMap<String, HashSet<String>> commonStocksToBlocksMap = commonBlockData.getDistinctStocksToBlocksMap(allStocksMap);
+            TreeMap<String, HashSet<String>> commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);
+            SelectBlockModel selectBlockModel = new SelectBlockModel(allStocksReader.getStocksMap(), commonStocksToBlocksMap, commonBlocksToStocksMap);
             selectBlockModel.select();
         } catch (YiException e) {
             e.printStackTrace();

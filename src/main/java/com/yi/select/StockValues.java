@@ -88,7 +88,7 @@ public class StockValues {
 
     @Override
     public String toString() {
-        return "StockValues{" +
+        return "[" +
                 "price=" + price +
                 ", yesterdayFinishPrice=" + yesterdayFinishPrice +
                 ", todayStartPrice=" + todayStartPrice +
@@ -96,6 +96,6 @@ public class StockValues {
                 ", turnOver=" + turnOver +
                 ", priceRateToYesterdayFinish=" + getPriceRateToYesterdayFinish() +
                 ", priceRateToTodayStart=" + getPriceRateToTodayStart() +
-                '}';
+                ']';
     }
 }

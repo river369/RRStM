@@ -16,12 +16,12 @@ public class SelectStockModel {
     final String[] attributeNames = {"priceRateToYesterdayFinish", "priceRateToTodayStart", "volumeRatio",  "turnOver"};
     double[] attributeValues = new double[attributeNames.length];
 
-    public void select(List<Map.Entry<String, BlockValues>> topBlockList) throws YiException{
-        //1. get distinct blocks
+    public List<Map.Entry<String, StockValues>> select(List<Map.Entry<String, BlockValues>> topBlockList) throws YiException{
+        //1. get distinct blocks. Key is stock name, values are stock real time values
         Map<String, StockValues> distinctStocks = getDistinctStocks(topBlockList);
-
+        //2. select the top stocks with all of 4 kinds values in top 10%
         List<Map.Entry<String, StockValues>> selectedStockList = selectBlocksWithRealtimeData(distinctStocks);
-
+        return selectedStockList;
     }
 
     /**
@@ -56,7 +56,7 @@ public class SelectStockModel {
     }
 
     List<Map.Entry<String, StockValues>> selectBlocksWithRealtimeData(Map<String, StockValues> stocks) {
-
+        // 1. set attributeValues[] values with top bestRealTimeStocksByRatio 10 percent
         List<Map.Entry<String, StockValues>> stockEntryList = new ArrayList<Map.Entry<String, StockValues>>(stocks.entrySet());
         for (int i = 0; i < attributeNames.length; i++) {
             final String attributeName = attributeNames[i];
@@ -73,6 +73,7 @@ public class SelectStockModel {
 //                System.out.println(stock+","+stocks.get(stock));
 //            }
         }
+        // 2. select best stocks with all of the column are better than values in attributeValues[]
         List<Map.Entry<String, StockValues>> selectedStocksList = new ArrayList<Map.Entry<String, StockValues>>();
         for (Map.Entry<String, StockValues> stockEntry : stockEntryList){
             boolean isAllMatch = true;
@@ -87,6 +88,15 @@ public class SelectStockModel {
                 selectedStocksList.add(stockEntry);
             }
         }
+
+        Collections.sort(selectedStocksList, new Comparator<Map.Entry<String, StockValues>>() {
+            public int compare(Map.Entry<String, StockValues> o1, Map.Entry<String, StockValues> o2) {
+                if (o1.getValue().getValueByType(attributeNames[0]) == o2.getValue().getValueByType(attributeNames[0]) ) {
+                    return o1.getValue().getValueByType(attributeNames[1]) < o2.getValue().getValueByType(attributeNames[1]) ? 1 : -1;
+                }
+                return o1.getValue().getValueByType(attributeNames[0]) < o2.getValue().getValueByType(attributeNames[0]) ? 1 : -1;
+            }
+        });
 
         return selectedStocksList;
     }
