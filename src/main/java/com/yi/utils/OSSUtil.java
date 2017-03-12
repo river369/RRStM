@@ -3,6 +3,7 @@ package com.yi.utils;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.PutObjectRequest;
+import com.aliyun.oss.model.SimplifiedObjectMeta;
 import com.yi.EnvConstants;
 import com.yi.YiConstants;
 
@@ -14,7 +15,9 @@ import java.io.File;
 public class OSSUtil {
 
     public static void main(String[] args) {
-        System.out.println(OSSUtil.exist(EnvConstants.OSS_KT_PREFIX + YiConstants.localPreSelectedBlockFileName));
+        //System.out.println(OSSUtil.exist(EnvConstants.OSS_KT_PREFIX + YiConstants.localPreSelectedBlockFileName));
+        System.out.println(DateUtils.isToday(
+                OSSUtil.getSimplifiedObjectMeta(EnvConstants.OSS_KT_PREFIX + YiConstants.localPreSelectedBlockFileName).getLastModified()));
     }
     public static OSSClient getClient(){
         OSSClient ossClient = new OSSClient(EnvConstants.OSS_UPLOAD_URL, EnvConstants.ACCESS_KEY_ID, EnvConstants.ACCESS_KEY_SECRET);
@@ -31,6 +34,15 @@ public class OSSUtil {
         ossClient.shutdown();
         return existed;
     }
+
+    public static SimplifiedObjectMeta getSimplifiedObjectMeta(String ossPath){
+        OSSClient ossClient = getClient();
+        SimplifiedObjectMeta objectMeta = ossClient.getSimplifiedObjectMeta(EnvConstants.OSS_AISTOCKYI_BUCKET, ossPath);
+        ossClient.shutdown();
+        return objectMeta;
+    }
+
+
     public static void getObject(String ossPath, File file){
         OSSClient ossClient = getClient();
         ossClient.getObject(new GetObjectRequest(EnvConstants.OSS_AISTOCKYI_BUCKET, ossPath), file);

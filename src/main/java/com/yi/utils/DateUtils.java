@@ -24,6 +24,14 @@ public class DateUtils {
         return df.format(new Date());
     }
 
+    public static boolean isToday(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = df.format(date);
+        //System.out.println(dateString);
+        //System.out.println(DateUtils.getTodayString());
+        return dateString.equalsIgnoreCase(DateUtils.getTodayString());
+    }
+
     public static String getYesterdayString(){
         Date date=new Date();//取时间
         Calendar calendar = new GregorianCalendar();

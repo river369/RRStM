@@ -72,6 +72,12 @@ public class SelectFramework {
                 System.out.println("Cannot fine OSS file " + ossKey);
                 sleep(5000);
             }
+            while ( !alwayRun &&
+                    !DateUtils.isToday(OSSUtil.getSimplifiedObjectMeta(EnvConstants.OSS_KT_PREFIX + YiConstants.localPreSelectedBlockFileName)
+                            .getLastModified())) {
+                System.out.println("There are no file upload for " + ossKey + " today.");
+                sleep(5000);
+            }
             OSSUtil.getObject(ossKey, new File(YiConstants.getSelectorPath() + fileName ));
         }
     }
