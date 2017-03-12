@@ -2,6 +2,7 @@ package com.yi.select;
 
 import com.yi.EnvConstants;
 import com.yi.YiConstants;
+import com.yi.base.CommonFramework;
 import com.yi.db.Selection;
 import com.yi.db.SelectionItem;
 import com.yi.db.SelectionDao;
@@ -18,11 +19,9 @@ import java.util.Map;
 /**
  * Created by jianguog on 17/3/7.
  */
-public class SelectFramework {
-    boolean alwayRun;
-
+public class SelectFramework extends CommonFramework {
     public SelectFramework(boolean alwayRun) {
-        this.alwayRun = alwayRun;
+        super(alwayRun);
     }
 
     public void run(){
@@ -82,15 +81,6 @@ public class SelectFramework {
         }
     }
 
-    void checkTime(){
-        if (alwayRun) return;
-        int hour = DateUtils.getCurrentHour();
-        while (hour < 9 || hour > 15 ) {
-            System.out.println("The job only run between 9:00 and 15:00");
-            sleep(60000);
-        }
-    }
-
     void processingOutputs (long selection_id, List<StockOutput> stockOutputList,  String msg) {
         System.out.println("Selected " + stockOutputList.size() + " stocks");
         SelectionDao selectionDao = new SelectionDao();
@@ -128,13 +118,6 @@ public class SelectFramework {
         return str.replaceAll("\\[","").replaceAll("\\]","");
     }
 
-    void sleep(long time){
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
     public static void main(String[] args) {
         boolean alwaysRun = true;
         //System.out.println(args[0]);
