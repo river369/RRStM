@@ -8,13 +8,11 @@ import java.util.HashSet;
 public class StockOutput {
     String id;
     String name;
-    HashSet<String> blocks;
     StockValues values;
 
-    public StockOutput(String id, String name, HashSet<String> blocks, StockValues values) {
+    public StockOutput(String id, String name, StockValues values) {
         this.id = id;
         this.name = name;
-        this.blocks = blocks;
         this.values = values;
     }
 
@@ -23,7 +21,6 @@ public class StockOutput {
         return "StockOutput{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", blocks=" + blocks +
                 ", values=" + values +
                 '}';
     }
@@ -42,14 +39,6 @@ public class StockOutput {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public HashSet<String> getBlocks() {
-        return blocks;
-    }
-
-    public void setBlocks(HashSet<String> blocks) {
-        this.blocks = blocks;
     }
 
     public StockValues getValues() {

@@ -1,5 +1,7 @@
 package com.yi.select;
 
+import java.util.HashSet;
+
 /**
  * Created by jianguog on 17/3/7.
  */
@@ -10,6 +12,9 @@ public class StockValues {
     private float todayStartPrice; // 10 今开盘Price
     private float volumeRatio; //22 量比
     private float turnOver; //23 换手
+
+    HashSet<String> drivenByBlocks = new HashSet<String>();
+    HashSet<String> belongToBlocks = new HashSet<String>();;
 
     public StockValues(float price, float yesterdayFinishPrice, float todayStartPrice, float volumeRatio, float turnOver) {
         this.price = price;
@@ -86,6 +91,22 @@ public class StockValues {
         this.turnOver = turnOver;
     }
 
+    public HashSet<String> getDrivenByBlocks() {
+        return drivenByBlocks;
+    }
+
+    public void setDrivenByBlocks(HashSet<String> drivenByBlocks) {
+        this.drivenByBlocks = drivenByBlocks;
+    }
+
+    public HashSet<String> getBelongToBlocks() {
+        return belongToBlocks;
+    }
+
+    public void setBelongToBlocks(HashSet<String> belongToBlocks) {
+        this.belongToBlocks = belongToBlocks;
+    }
+
     @Override
     public String toString() {
         return "[" +
@@ -94,8 +115,8 @@ public class StockValues {
                 ", todayStartPrice=" + todayStartPrice +
                 ", volumeRatio=" + volumeRatio +
                 ", turnOver=" + turnOver +
-                ", priceRateToYesterdayFinish=" + getPriceRateToYesterdayFinish() +
-                ", priceRateToTodayStart=" + getPriceRateToTodayStart() +
+                ", drivenByBlocks=" + drivenByBlocks +
+                ", belongToBlocks=" + belongToBlocks +
                 ']';
     }
 }

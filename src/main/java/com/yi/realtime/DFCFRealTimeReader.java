@@ -23,6 +23,12 @@ public class DFCFRealTimeReader {
             e.printStackTrace();
         }
     }
+
+    /**
+     *
+     * @return key is stock, value is stock realtime data
+     * @throws YiException
+     */
     public Map<String, RealTimeData> getDFCFRealTimeData() throws YiException{
         List<Integer> newsCountList = new ArrayList<Integer>();
         String response = HttpReader.sendGet(YiConstants.dfcfURL,YiConstants.dfcfParameter);

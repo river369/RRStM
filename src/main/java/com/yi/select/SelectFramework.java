@@ -31,13 +31,18 @@ public class SelectFramework {
         //System.out.println(System.currentTimeMillis() - start);
 
         try {
-            // 2. select the best blocks
-            getPreselectedFiles();
-            SelectModel selectModel = new SelectModel();
-            List<StockOutput>  selectedStockList = selectModel.select(allStocksMap);
-            for (StockOutput stockOutput : selectedStockList) {
-                System.out.println(stockOutput);
+            while (true){
+                // 2. select the best blocks
+                getPreselectedFiles();
+                SelectModel selectModel = new SelectModel();
+                List<StockOutput>  selectedStockList = selectModel.select(allStocksMap);
+                for (StockOutput stockOutput : selectedStockList) {
+                    System.out.println(stockOutput);
+                }
+
+                sleep(5000);
             }
+
 
         } catch (YiException e) {
             ExceptionHandler.HandleException(e);
@@ -49,18 +54,21 @@ public class SelectFramework {
         for (String fileName : filesToDownLoad ) {
             String ossKey = EnvConstants.OSS_KT_PREFIX + fileName;
             while (! OSSUtil.exist(ossKey) ) {
-                try {
-                    System.out.println("Cannot fine OSS file " + ossKey);
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                System.out.println("Cannot fine OSS file " + ossKey);
+                sleep(5000);
             }
             OSSUtil.getObject(ossKey, new File(YiConstants.getSelectorPath() + fileName ));
         }
 
     }
 
+    void sleep(long time){
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
         SelectFramework selectFramework = new SelectFramework();
         selectFramework.run();

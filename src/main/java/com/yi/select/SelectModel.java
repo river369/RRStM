@@ -30,7 +30,7 @@ public class SelectModel {
         List<Map.Entry<String, BlockValues>> topBlockList = selectBlockModel.select();
 
         // 2. Select the best stocks in the best blocks
-        SelectStockModel selectStockModel = new SelectStockModel();
+        SelectStockModel selectStockModel = new SelectStockModel(commonStocksToBlocksMap);
         List<Map.Entry<String, StockValues>> selectedStockList = selectStockModel.select(topBlockList);
 
         // 3 orgnize the output data
@@ -38,7 +38,7 @@ public class SelectModel {
         for (int i = 0 ; i < selectedStockList.size(); i++) {
             String stockId = selectedStockList.get(i).getKey();
             StockOutput stockOutput = new StockOutput(stockId, allStocksMap.get(stockId.substring(2)),
-                    commonStocksToBlocksMap.get(stockId), selectedStockList.get(i).getValue());
+                    selectedStockList.get(i).getValue());
             stockOutputsList.add(stockOutput);
         }
         return stockOutputsList;

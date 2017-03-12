@@ -15,21 +15,28 @@ public class SelectStockModel {
 
     final String[] attributeNames = {"priceRateToYesterdayFinish", "priceRateToTodayStart", "volumeRatio",  "turnOver"};
     double[] attributeValues = new double[attributeNames.length];
+    // Key is stock name, values are the blocks that contain the stock
+    TreeMap<String, HashSet<String>> commonStocksToBlocksMap;
+
+    public SelectStockModel(TreeMap<String, HashSet<String>> commonStocksToBlocksMap) {
+        this.commonStocksToBlocksMap = commonStocksToBlocksMap;
+    }
 
     public List<Map.Entry<String, StockValues>> select(List<Map.Entry<String, BlockValues>> topBlockList) throws YiException{
         //1. get distinct blocks. Key is stock name, values are stock real time values
-        Map<String, StockValues> distinctStocks = getDistinctStocks(topBlockList);
+        Map<String, StockValues> distinctStocks = getDistinctStocksWithRealtimeValues(topBlockList);
         //2. select the top stocks with all of 4 kinds values in top 10%
         List<Map.Entry<String, StockValues>> selectedStockList = selectBlocksWithRealtimeData(distinctStocks);
         return selectedStockList;
     }
 
     /**
+     * Get distinct stocks and it real time values
      * @param topBlockList topBlockListkey is block name, values are blockvalues
      * @return key is stock name, values are stock values
      * @throws YiException
      */
-    Map<String, StockValues> getDistinctStocks(List<Map.Entry<String, BlockValues>> topBlockList) throws YiException {
+    Map<String, StockValues> getDistinctStocksWithRealtimeValues(List<Map.Entry<String, BlockValues>> topBlockList) throws YiException {
         // 1. Get all stock infor from DFCF
         DFCFRealTimeReader dfcfRealTimeReader = new DFCFRealTimeReader();
         Map<String, RealTimeData> dfcfRealTimeDataMap= dfcfRealTimeReader.getDFCFRealTimeData();
@@ -38,13 +45,18 @@ public class SelectStockModel {
         Map<String, StockValues> distinctStocks = new HashMap<String, StockValues>();
         for (Map.Entry<String, BlockValues> block : topBlockList) {
             //System.out.println(blockName + "," + block.getValue());
-            HashSet<String> blockSet = block.getValue().getStocksSet();
-            for (String stockName : blockSet) {
+            HashSet<String> stockSet = block.getValue().getStocksSet();
+            for (String stockName : stockSet) {
                 if (!distinctStocks.containsKey(stockName) && dfcfRealTimeDataMap.containsKey(stockName.substring(2))) {
                     RealTimeData realTimeData = dfcfRealTimeDataMap.get(stockName.substring(2));
                     StockValues stockValues = new StockValues(realTimeData.getPrice(), realTimeData.getYesterdayFinishPrice(),
                             realTimeData.getTodayStartPrice(), realTimeData.getVolumeRatio(), realTimeData.getTurnOver());
+                    stockValues.setBelongToBlocks(commonStocksToBlocksMap.get(stockName));
                     distinctStocks.put(stockName, stockValues);
+                }
+                StockValues stockValues = distinctStocks.get(stockName);
+                if (stockValues != null) {
+                    stockValues.getDrivenByBlocks().add(block.getKey());
                 }
             }
         }

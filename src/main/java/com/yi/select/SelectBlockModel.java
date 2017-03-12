@@ -28,6 +28,11 @@ public class SelectBlockModel {
         this.commonBlocksToStocksMap = commonBlocksToStocksMap;
     }
 
+    /**
+     *
+     * @return key is block name, value is active stock quantity and stock set
+     * @throws YiException
+     */
     public List<Map.Entry<String, BlockValues>> select() throws YiException{
 
         // Select top blocks base on filter files
