@@ -131,9 +131,11 @@ public class SelectFramework {
     }
     public static void main(String[] args) {
         boolean alwaysRun = true;
-        if (args != null && args.length > 0 && null != args[0] && "0" == args[0]){
+        //System.out.println(args[0]);
+        if (args != null && args.length > 0 && null != args[0] && "0".equalsIgnoreCase(args[0])){
             alwaysRun = false;
         }
+        //System.out.println(alwaysRun);
         SelectFramework selectFramework = new SelectFramework(alwaysRun);
         selectFramework.run();
     }
