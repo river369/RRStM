@@ -14,12 +14,13 @@ public class ExceptionHandler {
 
     public static String REALTIME_AVAILAVLE_BLOCKS_TOO_LITTLE = "实时选股没有完成，板块中股票量太少.";
 
-    public static void HandleException(YiException e){
+    public static String HandleException(YiException e){
         if (e.getMessage().equalsIgnoreCase(SYSTEM_BLOCK_INFO_STOCKS_COUNT_TOO_LOW) ||
                 e.getMessage().equalsIgnoreCase(SYSTEM_BLOCK_INFO_BLOCKS_COUNT_TOO_LOW)){
             e.printStackTrace();
             System.exit(-1001);
         }
         System.out.println(e.getMessage());
+        return e.getMessage();
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yi.db.SelectionItem" >
+
+    <insert id="insertSelection" parameterType="Selection">
+        INSERT into selection(selection_id,status,description) VALUES(#{selection_id}, #{status},#{description})
+    </insert>
+
+    <insert id="insertSelectionItems" parameterType="SelectionItem">
+        INSERT into selection_items(selection_id, stock_id,stock_name,driven_by_blocks,belong_to_blocks,price,yesterday_finish_price,
+        today_start_price,volume_ratio,turn_over)
+        VALUES(#{selection_id}, #{stock_id}, #{stock_name},#{driven_by_blocks}, #{belong_to_blocks},#{price}, #{yesterday_finish_price},
+        #{today_start_price}, #{volume_ratio}, #{turn_over})
+    </insert>
+</mapper>

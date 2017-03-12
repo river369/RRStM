@@ -1,7 +1,5 @@
 package com.yi.select;
 
-import java.util.HashSet;
-
 /**
  * Created by jianguog on 17/3/11.
  */
@@ -18,11 +16,9 @@ public class StockOutput {
 
     @Override
     public String toString() {
-        return "StockOutput{" +
-                "id='" + id + '\'' +
+        return  "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", values=" + values +
-                '}';
+                ", values=" + values ;
     }
 
     public String getId() {

@@ -11,10 +11,12 @@ import java.util.GregorianCalendar;
 public class DateUtils {
 
     public static void main(String[] args) {
+        System.out.println(System.currentTimeMillis());
         System.out.println(getTodayString());
         System.out.println(getYesterdayString());
         System.out.println(getCurrentTimeToSecondString());
         System.out.println(getCurrentTimeToMinuteString());
+        System.out.println(getCurrentHour());
     }
 
     public static String getTodayString(){
@@ -41,4 +43,11 @@ public class DateUtils {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
         return df.format(new Date());
     }
+
+    public static int getCurrentHour(){
+        SimpleDateFormat df = new SimpleDateFormat("HH");
+        return Integer.parseInt(df.format(new Date()));
+    }
+
+
 }

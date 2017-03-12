@@ -5,8 +5,9 @@ import java.sql.Timestamp;
 /**
  * Created by jianguog on 17/3/12.
  */
-public class SelectedStock {
+public class SelectionItem {
     long id;
+    long selection_id;
     String stock_id;
     String stock_name;
     String driven_by_blocks;
@@ -17,6 +18,14 @@ public class SelectedStock {
     float volume_ratio;
     float turn_over;
     Timestamp creation_date;
+
+    public long getSelection_id() {
+        return selection_id;
+    }
+
+    public void setSelection_id(long selection_id) {
+        this.selection_id = selection_id;
+    }
 
     public long getId() {
         return id;

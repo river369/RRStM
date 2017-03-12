@@ -1,0 +1,2 @@
+@echo off
+.\jre1.8.0_121\bin\java -cp lib\RRStm.jar;lib\aliyun-sdk-oss-2.5.0.jar;lib\commons-codec-1.9.jar;lib\commons-io-2.5.jar;lib\commons-logging-1.2.jar;lib\hamcrest-core-1.1.jar;lib\httpclient-4.4.1.jar;lib\httpcore-4.4.1.jar;lib\jdom-1.1.jar com.yi.upload.UploadKTFiles

@@ -2,9 +2,13 @@ package com.yi.select;
 
 import com.yi.EnvConstants;
 import com.yi.YiConstants;
+import com.yi.db.Selection;
+import com.yi.db.SelectionItem;
+import com.yi.db.SelectionDao;
 import com.yi.exception.ExceptionHandler;
 import com.yi.exception.YiException;
 import com.yi.stocks.AllStocksReader;
+import com.yi.utils.DateUtils;
 import com.yi.utils.OSSUtil;
 
 import java.io.File;
@@ -15,9 +19,14 @@ import java.util.Map;
  * Created by jianguog on 17/3/7.
  */
 public class SelectFramework {
+    boolean alwayRun;
 
+    public SelectFramework(boolean alwayRun) {
+        this.alwayRun = alwayRun;
+    }
 
     public void run(){
+        checkTime();
         // 1. Load all stocks from website
         long start = System.currentTimeMillis();
         // Read all stocks from website
@@ -30,23 +39,29 @@ public class SelectFramework {
         }
         //System.out.println(System.currentTimeMillis() - start);
 
-        try {
-            while (true){
-                // 2. select the best blocks
+        // Start to iterate the run every 5 seconds
+        while (true){
+            List<StockOutput>  stockOutputList = null;
+            String msg = null;
+            checkTime();
+            long selection_id = System.currentTimeMillis();
+            try {
+                // 2. download the preselected file
+                System.out.println("Selecting at " + DateUtils.getCurrentTimeToSecondString());
                 getPreselectedFiles();
+
+                // 3. select the best blocks
                 SelectModel selectModel = new SelectModel();
-                List<StockOutput>  selectedStockList = selectModel.select(allStocksMap);
-                for (StockOutput stockOutput : selectedStockList) {
-                    System.out.println(stockOutput);
-                }
+                stockOutputList = selectModel.select(allStocksMap);
 
-                sleep(5000);
+            } catch (YiException e) {
+                msg = ExceptionHandler.HandleException(e);
             }
-
-
-        } catch (YiException e) {
-            ExceptionHandler.HandleException(e);
+            // 4. processing the output to db
+            processingOutputs (selection_id, stockOutputList, msg);
+            sleep(5000);
         }
+
     }
 
     void getPreselectedFiles(){
@@ -59,7 +74,52 @@ public class SelectFramework {
             }
             OSSUtil.getObject(ossKey, new File(YiConstants.getSelectorPath() + fileName ));
         }
+    }
 
+    void checkTime(){
+        if (alwayRun) return;
+        int hour = DateUtils.getCurrentHour();
+        while (hour < 9 || hour > 15 ) {
+            System.out.println("The job only run between 9:00 and 15:00");
+            sleep(60000);
+        }
+    }
+
+    void processingOutputs (long selection_id, List<StockOutput> stockOutputList,  String msg) {
+        System.out.println("Selected " + stockOutputList.size() + " stocks");
+        SelectionDao selectionDao = new SelectionDao();
+        Selection selection = new Selection();
+        selection.setSelection_id(selection_id);
+        int status = 0;
+        if (msg != null) {
+            status = 1;
+            selection.setDescription(msg);
+        }
+        selection.setStatus(status);
+        selectionDao.insertSelection(selection);
+
+        if (stockOutputList.size() > 0) {
+            for (StockOutput stockOutput : stockOutputList) {
+                System.out.println(stockOutput);
+                SelectionItem selectionItem = new SelectionItem();
+                selectionItem.setSelection_id(selection_id);
+                selectionItem.setStock_id(stockOutput.getId());
+                selectionItem.setStock_name(stockOutput.getName());
+                StockValues stockValues = stockOutput.getValues();
+                selectionItem.setBelong_to_blocks(removeBracket(stockValues.getBelongToBlocks().toString()));
+                selectionItem.setDriven_by_blocks(removeBracket(stockValues.getDrivenByBlocks().toString()));
+                selectionItem.setPrice(stockValues.getPrice());
+                selectionItem.setYesterday_finish_price(stockValues.getYesterdayFinishPrice());
+                selectionItem.setToday_start_price(stockValues.getTodayStartPrice());
+                selectionItem.setVolume_ratio(stockValues.getVolumeRatio());
+                selectionItem.setTurn_over(stockValues.getTurnOver());
+                selectionDao.insertSelectionItem(selectionItem);
+            }
+        }
+    }
+
+    String removeBracket(String str) {
+        return str.replaceAll("\\[","").replaceAll("\\]","");
     }
 
     void sleep(long time){
@@ -70,7 +130,11 @@ public class SelectFramework {
         }
     }
     public static void main(String[] args) {
-        SelectFramework selectFramework = new SelectFramework();
+        boolean alwaysRun = true;
+        if (args != null && args.length > 0 && null != args[0] && "0" == args[0]){
+            alwaysRun = false;
+        }
+        SelectFramework selectFramework = new SelectFramework(alwaysRun);
         selectFramework.run();
     }
 }

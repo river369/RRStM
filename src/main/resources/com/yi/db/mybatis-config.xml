@@ -6,7 +6,8 @@
     <properties resource = "env.properties"/>
 
     <typeAliases>
-        <typeAlias type="com.yi.db.SelectedStock" alias="SelectedStock" />
+        <typeAlias type="com.yi.db.Selection" alias="Selection" />
+        <typeAlias type="com.yi.db.SelectionItem" alias="SelectionItem" />
     </typeAliases>
 
     <environments default="development">
@@ -22,6 +23,6 @@
     </environments>
 
     <mappers>
-        <mapper resource="com/yi/db/SelectedStockMapper.xml" />
+        <mapper resource="com/yi/db/SelectionMapper.xml" />
     </mappers>
 </configuration>
