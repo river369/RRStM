@@ -8,6 +8,7 @@
     <typeAliases>
         <typeAlias type="com.yi.db.Selection" alias="Selection" />
         <typeAlias type="com.yi.db.SelectionItem" alias="SelectionItem" />
+        <typeAlias type="com.yi.db.Temperature" alias="Temperature" />
     </typeAliases>
 
     <environments default="development">
@@ -24,5 +25,6 @@
 
     <mappers>
         <mapper resource="com/yi/db/SelectionMapper.xml" />
+        <mapper resource="com/yi/db/TemperatureMapper.xml" />
     </mappers>
 </configuration>

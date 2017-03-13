@@ -46,7 +46,7 @@ public class SelectFramework extends CommonFramework {
             long selection_id = System.currentTimeMillis();
             try {
                 // 2. download the preselected file
-                System.out.println("Selecting at " + DateUtils.getCurrentTimeToSecondString());
+                System.out.println("Selecting at " + DateUtils.getCurrentTimeToSecondString() + " , selection id is " + selection_id);
                 getPreselectedFiles();
 
                 // 3. select the best blocks

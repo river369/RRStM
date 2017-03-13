@@ -3,9 +3,7 @@ package com.yi.temperature;
 import com.yi.EnvConstants;
 import com.yi.YiConstants;
 import com.yi.base.CommonFramework;
-import com.yi.db.Selection;
-import com.yi.db.SelectionDao;
-import com.yi.db.SelectionItem;
+import com.yi.db.*;
 import com.yi.exception.ExceptionHandler;
 import com.yi.exception.YiException;
 import com.yi.realtime.DFCFRealTimeReader;
@@ -33,24 +31,13 @@ public class TemperatureFramework  extends CommonFramework {
     }
 
     public void run(){
-        checkTime();
-//        // 1. Load all stocks from website
-//        long start = System.currentTimeMillis();
-//        // Read all stocks from website
-//        AllStocksReader allStocksReader = new AllStocksReader();
-//        // key is stock code, value is stock name
-//        Map<String, String> allStocksMap = allStocksReader.getStocksMap();
-//        if (allStocksMap.size() < 3000) {
-//            System.out.println("Exit since stock size is abnormal. The value is " + allStocksMap.size());
-//            System.exit(-1000);
-//        }
-
         // Start to iterate the run every 5 seconds
         while (true){
             checkTime();
             Map<Integer, Integer> stocksDistribution = new TreeMap<Integer, Integer>();
             try {
                 // 1. Get all stock infor from DFCF
+                System.out.println("Calculating temperature at " + DateUtils.getCurrentTimeToSecondString());
                 DFCFRealTimeReader dfcfRealTimeReader = new DFCFRealTimeReader();
                 Map<String, RealTimeData> dfcfRealTimeDataMap = dfcfRealTimeReader.getDFCFRealTimeData();
 
@@ -67,7 +54,33 @@ public class TemperatureFramework  extends CommonFramework {
                         }
                     //}
                 }
+
+                Temperature temperature = new Temperature();
+                temperature.setD1(stocksDistribution.containsKey(-1) ? stocksDistribution.get(-1) : 0);
+                temperature.setD2(stocksDistribution.containsKey(-2) ? stocksDistribution.get(-2) : 0);
+                temperature.setD3(stocksDistribution.containsKey(-3) ? stocksDistribution.get(-3) : 0);
+                temperature.setD4(stocksDistribution.containsKey(-4) ? stocksDistribution.get(-4) : 0);
+                temperature.setD5(stocksDistribution.containsKey(-5) ? stocksDistribution.get(-5) : 0);
+                temperature.setD6(stocksDistribution.containsKey(-6) ? stocksDistribution.get(-6) : 0);
+                temperature.setD7(stocksDistribution.containsKey(-7) ? stocksDistribution.get(-7) : 0);
+                temperature.setD8(stocksDistribution.containsKey(-8) ? stocksDistribution.get(-8) : 0);
+                temperature.setD9(stocksDistribution.containsKey(-9) ? stocksDistribution.get(-9) : 0);
+                temperature.setD10(stocksDistribution.containsKey(-10) ? stocksDistribution.get(-10) : 0);
+                temperature.setD11(stocksDistribution.containsKey(-11) ? stocksDistribution.get(-11) : 0);
+                temperature.setI1(stocksDistribution.containsKey(1) ? stocksDistribution.get(1) : 0);
+                temperature.setI2(stocksDistribution.containsKey(2) ? stocksDistribution.get(2) : 0);
+                temperature.setI3(stocksDistribution.containsKey(3) ? stocksDistribution.get(3) : 0);
+                temperature.setI4(stocksDistribution.containsKey(4) ? stocksDistribution.get(4) : 0);
+                temperature.setI5(stocksDistribution.containsKey(5) ? stocksDistribution.get(5) : 0);
+                temperature.setI6(stocksDistribution.containsKey(6) ? stocksDistribution.get(6) : 0);
+                temperature.setI7(stocksDistribution.containsKey(7) ? stocksDistribution.get(7) : 0);
+                temperature.setI8(stocksDistribution.containsKey(8) ? stocksDistribution.get(8) : 0);
+                temperature.setI9(stocksDistribution.containsKey(9) ? stocksDistribution.get(9) : 0);
+                temperature.setI10(stocksDistribution.containsKey(10) ? stocksDistribution.get(10) : 0);
+                temperature.setI11(stocksDistribution.containsKey(11) ? stocksDistribution.get(11) : 0);
                 System.out.println(stocksDistribution);
+                TemperatureDao temperatureDao = new TemperatureDao();
+                temperatureDao.insertTemperature(temperature);
 
             } catch (YiException e) {
                 ExceptionHandler.HandleException(e);

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yi.db.Temperature" >
+
+    <insert id="insertTemperature" parameterType="Temperature">
+        INSERT into temperature(D11,D10,D9,D8,D7,D6,D5,D4,D3,D2,D1,I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11)
+        VALUES(#{D11}, #{D10}, #{D9}, #{D8}, #{D7}, #{D6}, #{D5}, #{D4}, #{D3}, #{D3}, #{D1},
+        #{I1}, #{I2}, #{I3},  #{I4}, #{I5}, #{I6}, #{I7}, #{I8}, #{I9}, #{I10}, #{I11})
+    </insert>
+
+</mapper>
