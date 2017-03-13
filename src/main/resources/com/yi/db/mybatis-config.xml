@@ -8,6 +8,7 @@
     <typeAliases>
         <typeAlias type="com.yi.db.Selection" alias="Selection" />
         <typeAlias type="com.yi.db.SelectionItem" alias="SelectionItem" />
+        <typeAlias type="com.yi.db.SelectionItemRealTime" alias="SelectionItemRealTime" />
         <typeAlias type="com.yi.db.Temperature" alias="Temperature" />
     </typeAliases>
 
@@ -25,6 +26,6 @@
 
     <mappers>
         <mapper resource="com/yi/db/SelectionMapper.xml" />
-        <mapper resource="com/yi/db/TemperatureMapper.xml" />
+        <mapper resource="com/yi/db/DFCFRealTimeMapper.xml" />
     </mappers>
 </configuration>

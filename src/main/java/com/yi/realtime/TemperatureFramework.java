@@ -1,23 +1,11 @@
-package com.yi.temperature;
+package com.yi.realtime;
 
-import com.yi.EnvConstants;
-import com.yi.YiConstants;
 import com.yi.base.CommonFramework;
 import com.yi.db.*;
 import com.yi.exception.ExceptionHandler;
 import com.yi.exception.YiException;
-import com.yi.realtime.DFCFRealTimeReader;
-import com.yi.realtime.RealTimeData;
-import com.yi.select.SelectModel;
-import com.yi.select.StockOutput;
-import com.yi.select.StockValues;
-import com.yi.stocks.AllStocksReader;
 import com.yi.utils.DateUtils;
-import com.yi.utils.OSSUtil;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -79,8 +67,8 @@ public class TemperatureFramework  extends CommonFramework {
                 temperature.setI10(stocksDistribution.containsKey(10) ? stocksDistribution.get(10) : 0);
                 temperature.setI11(stocksDistribution.containsKey(11) ? stocksDistribution.get(11) : 0);
                 System.out.println(stocksDistribution);
-                TemperatureDao temperatureDao = new TemperatureDao();
-                temperatureDao.insertTemperature(temperature);
+                TemperatureDao TemperatureDao = new TemperatureDao();
+                TemperatureDao.insertTemperature(temperature);
 
             } catch (YiException e) {
                 ExceptionHandler.HandleException(e);

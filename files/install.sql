@@ -28,6 +28,20 @@ PRIMARY KEY (`id`),
 KEY (`selection_id`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci CHECKSUM=0 ROW_FORMAT=DYNAMIC DELAY_KEY_WRITE=0;
 
+--DFCF Real data for selected items.
+CREATE TABLE IF NOT EXISTS `stock`.`selection_items_realtime_history` (
+`id` bigint(12) NOT NULL AUTO_INCREMENT COMMENT '主键',
+`stock_id` varchar(10) NOT NULL COMMENT 'Stock Id like SH000000',
+`price` decimal(7,2) DEFAULT 0  COMMENT '当前价格',
+`yesterday_finish_price` decimal(7,2) DEFAULT 0  COMMENT '昨日收盘价格',
+`today_start_price` decimal(7,2) DEFAULT 0  COMMENT '今日开盘价格',
+`volume_ratio` decimal(7,2) DEFAULT 0  COMMENT '量比',
+`turn_over` decimal(7,2) DEFAULT 0  COMMENT '换手',
+`creation_date` datetime  DEFAULT NOW() COMMENT 'Creation datetime',
+PRIMARY KEY (`id`),
+KEY (`stock_id`),
+KEY (`creation_date`)
+) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci CHECKSUM=0 ROW_FORMAT=DYNAMIC DELAY_KEY_WRITE=0;
 
 -- Temperature
 CREATE TABLE IF NOT EXISTS `stock`.`temperature` (
@@ -58,3 +72,4 @@ CREATE TABLE IF NOT EXISTS `stock`.`temperature` (
 PRIMARY KEY (`id`),
 KEY (`creation_date`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci CHECKSUM=0 ROW_FORMAT=DYNAMIC DELAY_KEY_WRITE=0;
+

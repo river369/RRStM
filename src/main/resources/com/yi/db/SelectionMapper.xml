@@ -14,4 +14,28 @@
         VALUES(#{selection_id}, #{stock_id}, #{stock_name},#{driven_by_blocks}, #{belong_to_blocks},#{price}, #{yesterday_finish_price},
         #{today_start_price}, #{volume_ratio}, #{turn_over})
     </insert>
+
+    <insert id="insertSelectionItemRealtimeHistory" parameterType="SelectionItemRealTime">
+        INSERT into selection_items_realtime_history(stock_id,price,yesterday_finish_price,today_start_price,volume_ratio,turn_over)
+        VALUES(#{stock_id}, #{price}, #{yesterday_finish_price}, #{today_start_price}, #{volume_ratio}, #{turn_over})
+    </insert>
+
+
+    <!--sample 1-->
+    <!--<resultMap id="selectionItemResult" type="selectionItem">-->
+        <!--<result property="stock_id" column="stock_id"/>-->
+    <!--</resultMap>-->
+    <!--<select id="selectDistinctSelectionItems" resultType="selectionItem" parameterType="int" resultMap="selectionItemResult">-->
+        <!--SELECT distinct stock_id from selection_items WHERE creation_date > #{creation_date}-->
+    <!--</select>-->
+
+    <!--sample 2-->
+    <!--<select id="selectDistinctSelectionItems" resultType="selectionItem" parameterType="int">-->
+        <!--SELECT * from selection_items WHERE creation_date > #{creation_date}-->
+    <!--</select>-->
+
+    <select id="selectDistinctSelectionItems" resultType="selectionItem" parameterType="int">
+        SELECT distinct stock_id from selection_items WHERE creation_date > #{creation_date}
+    </select>
+
 </mapper>
