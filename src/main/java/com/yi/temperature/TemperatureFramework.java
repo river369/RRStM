@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by jianguog on 17/3/7.
@@ -33,37 +34,45 @@ public class TemperatureFramework  extends CommonFramework {
 
     public void run(){
         checkTime();
-        // 1. Load all stocks from website
-        long start = System.currentTimeMillis();
-        // Read all stocks from website
-        AllStocksReader allStocksReader = new AllStocksReader();
-        // key is stock code, value is stock name
-        Map<String, String> allStocksMap = allStocksReader.getStocksMap();
-        if (allStocksMap.size() < 3000) {
-            System.out.println("Exit since stock size is abnormal. The value is " + allStocksMap.size());
-            System.exit(-1000);
-        }
+//        // 1. Load all stocks from website
+//        long start = System.currentTimeMillis();
+//        // Read all stocks from website
+//        AllStocksReader allStocksReader = new AllStocksReader();
+//        // key is stock code, value is stock name
+//        Map<String, String> allStocksMap = allStocksReader.getStocksMap();
+//        if (allStocksMap.size() < 3000) {
+//            System.out.println("Exit since stock size is abnormal. The value is " + allStocksMap.size());
+//            System.exit(-1000);
+//        }
 
         // Start to iterate the run every 5 seconds
         while (true){
             checkTime();
-            Map<Integer, Integer> stocksDistribution = new HashMap<Integer, Integer>();
+            Map<Integer, Integer> stocksDistribution = new TreeMap<Integer, Integer>();
             try {
                 // 1. Get all stock infor from DFCF
                 DFCFRealTimeReader dfcfRealTimeReader = new DFCFRealTimeReader();
                 Map<String, RealTimeData> dfcfRealTimeDataMap = dfcfRealTimeReader.getDFCFRealTimeData();
 
                 for (RealTimeData realTimeData : dfcfRealTimeDataMap.values()){
-
-                    int range = (int)(((realTimeData.getPrice()/realTimeData.getTodayStartPrice()) - 1 ) * 100);
-                    System.out.println(realTimeData.getPrice() + "    " + realTimeData.getTodayStartPrice() + "  "+ range);
+                    float change = ((realTimeData.getPrice()/realTimeData.getTodayStartPrice()) - 1 ) * 100;
+                    Integer range = (int)(change > 0 ? Math.ceil(change) : Math.floor(change));
+                    //if (allStocksMap.containsKey(realTimeData.getId())) {
+                        //System.out.println(realTimeData.getPrice() + "    " + realTimeData.getTodayStartPrice() + "  "+ change+ "  " + range);
+                        Integer count = stocksDistribution.get(range);
+                        if (count == null) {
+                            stocksDistribution.put(range, new Integer(1));
+                        } else {
+                            stocksDistribution.put(range, new Integer(count + 1));
+                        }
+                    //}
                 }
+                System.out.println(stocksDistribution);
 
             } catch (YiException e) {
                 ExceptionHandler.HandleException(e);
             }
             sleep(5000);
-            break;
         }
 
     }
