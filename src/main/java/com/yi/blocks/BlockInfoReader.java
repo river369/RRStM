@@ -38,13 +38,22 @@ public class BlockInfoReader {
             //System.out.println(BCNodeList.getLength());
             for (int bcIndex = 0; bcIndex< bcNodeList.getLength(); bcIndex++){
                 BC bc = new BC();
-                bk.getBcList().add(bc);
                 Node bcNode = bcNodeList.item(bcIndex);
                 Node bcNameNode = bcNode.getAttributes().getNamedItem("Name");
                 bc.setName(bcNameNode.getNodeValue());
                 //System.out.println(bc.getName());
                 Node stockNode = bcNode.getAttributes().getNamedItem("Stock");
-                bc.setStockIds(stockNode.getNodeValue().split(";"));
+//                String[] stockIds = stockNode.getNodeValue().split(";");
+//                for (String stock : stockIds) {
+//                    if ("".equalsIgnoreCase(stock)) {
+//                        System.out.println(bk.getName() + " ~~~ " + bc.getName());
+//                    }
+//                }
+                String stocks = stockNode.getNodeValue();
+                if (null != stocks && !"".equalsIgnoreCase(stocks)) {
+                    bc.setStockIds(stocks.split(";"));
+                    bk.getBcList().add(bc);
+                }
                 //System.out.println(bc.getStocks().length);
             }
         }

@@ -28,8 +28,10 @@ public class YiConstants {
         return path;
     }
 
-    public static String majorIncrease = "MIDD主升.";
-    public static String followIncrease = "股池2：量单.";
+//    public static String majorIncrease = "MIDD主升.";
+//    public static String followIncrease = "股池2：量单.";
+    public static String majorIncrease = "主升.";
+    public static String followIncrease = "MIDD主升.";
 
     // Stock select parameter
     public static int minValidPreSelectedStockCount = 10;

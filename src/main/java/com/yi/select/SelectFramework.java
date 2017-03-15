@@ -82,6 +82,7 @@ public class SelectFramework extends CommonFramework {
     }
 
     void processingOutputs (long selection_id, List<StockOutput> stockOutputList,  String msg) {
+        if (null == stockOutputList) return;
         System.out.println("Selected " + stockOutputList.size() + " stocks");
         SelectionDao selectionDao = new SelectionDao();
         Selection selection = new Selection();
@@ -119,6 +120,7 @@ public class SelectFramework extends CommonFramework {
     }
 
     public static void main(String[] args) {
+        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
         boolean alwaysRun = true;
         //System.out.println(args[0]);
         if (args != null && args.length > 0 && null != args[0] && "0".equalsIgnoreCase(args[0])){

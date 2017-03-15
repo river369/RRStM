@@ -39,7 +39,7 @@ public class SelectBlockModel {
         List<Map.Entry<String, BlockValues>> topBlockList = selectTopBlocksList();
         for (Map.Entry<String, BlockValues> mapping : topBlockList) {
             mapping.getValue().setStocksSet(commonBlocksToStocksMap.get(mapping.getKey()));
-            //System.out.println(mapping.getKey() + "," + mapping.getValue());
+            System.out.println("SelectBlockModel:select(),"+ mapping.getKey() + "," + mapping.getValue());
         }
 
         return topBlockList;
@@ -55,6 +55,7 @@ public class SelectBlockModel {
 
         //2. select the top 10% item and stock count should be greater than 2
         // sort the map to list, //降序排序
+        // key is block, values is block values
         List<Map.Entry<String, BlockValues>> preSelectedBlockToStockCountList =
                 new ArrayList<Map.Entry<String, BlockValues>>(preSelectedBlockToStockCountMap.entrySet());
         Collections.sort(preSelectedBlockToStockCountList, new Comparator<Map.Entry<String, BlockValues>>() {
@@ -68,6 +69,7 @@ public class SelectBlockModel {
         for (int i = 0; i < selectBlockCount; i++) {
             if (preSelectedBlockToStockCountList.get(i).getValue().getActiveBlockCount() > YiConstants.bestSelectedStocksByMinCount) {
                 selectedBlockToStockCountListWithCount.add(preSelectedBlockToStockCountList.get(i));
+                System.out.println("Selected Top 10% blocks with ative block count (greater than 2)" + preSelectedBlockToStockCountList.get(i));
             }
         }
 
@@ -83,6 +85,7 @@ public class SelectBlockModel {
         for (int i = 0; i < selectBlockCount; i++) {
             if (selectedBlockToStockCountListWithCount.get(i).getValue().getActiveRatioInBlock() > YiConstants.bestSelectedStocksByActiveRatioMin) {
                 selectedBlockToStockCountListWithActiveRatio.add(selectedBlockToStockCountListWithCount.get(i));
+                System.out.println("Selected Top 60% blocks with ative block ratio (greater than 20%)" + selectedBlockToStockCountListWithCount.get(i));
             }
         }
 
@@ -115,6 +118,9 @@ public class SelectBlockModel {
         if (preSelectedStocksToBlocksMap.size() <= YiConstants.minValidPreSelectedStockCount) {
             throw new YiException(ExceptionHandler.PRE_SELECTED_STOCKS_TOO_LITTLE);
         }
+        for (String stock : preSelectedStocksToBlocksMap.keySet()){
+            System.out.println("SelectBlockModel:selectBlocksListWithPreSelectedStocks(),"+ stock + "," + preSelectedStocksToBlocksMap.get(stock));
+        }
 
         //Key is block name, Values are the stocks count that the block contains
         HashMap<String, BlockValues> preSelectedBlockToStockCountMap = new HashMap<String, BlockValues>();
@@ -138,6 +144,9 @@ public class SelectBlockModel {
         // set to 2 now. if stock is less than PRE_SELECTED_STOCKS_TOO_LITTLE
         if (preSelectedBlockToStockCountMap.size() <= YiConstants.minValidPreSelectedBlockCount) {
             throw new YiException(ExceptionHandler.PRE_SELECTED_BLOCKS_TOO_LITTLE);
+        }
+        for (String block : preSelectedBlockToStockCountMap.keySet()){
+            System.out.println("SelectBlockModel:selectBlocksListWithPreSelectedStocks(),"+ block + "," + preSelectedBlockToStockCountMap.get(block));
         }
         return preSelectedBlockToStockCountMap;
     }
