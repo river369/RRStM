@@ -1,6 +1,6 @@
 package com.yi.realtime;
 
-import com.yi.base.CommonFramework;
+import com.yi.base.CommonJob;
 import com.yi.db.*;
 import com.yi.exception.ExceptionHandler;
 import com.yi.exception.YiException;
@@ -12,9 +12,9 @@ import java.util.TreeMap;
 /**
  * Created by jianguog on 17/3/7.
  */
-public class TemperatureFramework  extends CommonFramework {
+public class TemperatureJob extends CommonJob {
 
-    public TemperatureFramework(boolean alwayRun) {
+    public TemperatureJob(boolean alwayRun) {
         super(alwayRun);
     }
 
@@ -85,7 +85,7 @@ public class TemperatureFramework  extends CommonFramework {
             alwaysRun = false;
         }
         //System.out.println(alwaysRun);
-        TemperatureFramework temperatureFramework = new TemperatureFramework(alwaysRun);
-        temperatureFramework.run();
+        TemperatureJob temperatureJob = new TemperatureJob(alwaysRun);
+        temperatureJob.run();
     }
 }

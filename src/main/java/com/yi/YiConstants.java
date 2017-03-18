@@ -6,8 +6,15 @@ import com.yi.utils.DateUtils;
  * Created by jianguog on 17/2/18.
  */
 public class YiConstants {
+    //=======================================
+    //  Common parameters
+    //=======================================
+    // kt files
     public static String localBlockInfoFileName = "SystemBlockInfo.data";
-    public static String localPreSelectedBlockFileName = "UserBlockInfo1390944714278353.data";
+    // realtime data from dfcf
+    public static String dfcfURL = "http://nufm.dfcfw.com/EM_Finance2014NumericApplication/JS.aspx";
+    public static String dfcfParameter = "type=CT&cmd=C._A&sty=FCOIATA&sortType=A&sortRule=1&page=1&pageSize=10000&js=var%20quote_123%3d{rank:[(x)],pages:(pc)}&token=7bc05d0d4c3c22ef9fca8c2a912d779c&jsName=quote_123&_g=0.8386441415641457";
+    public static String gbkCharset = "GBK";
 
     // service files path
     public static String getSelectorPath() {
@@ -18,6 +25,12 @@ public class YiConstants {
         }
         return path;
     }
+
+    //=======================================
+    //  KT file Solution parameters
+    //=======================================
+    public static String localPreSelectedBlockFileName = "UserBlockInfo1390944714278353.data";
+
     // local files and fitler from kt 交易师
     public static String getKTPath() {
         String path = "D:\\KT\\User\\BlockInfo\\";
@@ -54,11 +67,26 @@ public class YiConstants {
     public static int minDFCFRealTimeStockCount = 1000;
     public static int maxDFCFRealTimeStockSkipCount = 1000;
 
-    // realtime data from dfcf
-    public static String dfcfURL = "http://nufm.dfcfw.com/EM_Finance2014NumericApplication/JS.aspx";
-    public static String dfcfParameter = "type=CT&cmd=C._A&sty=FCOIATA&sortType=A&sortRule=1&page=1&pageSize=10000&js=var%20quote_123%3d{rank:[(x)],pages:(pc)}&token=7bc05d0d4c3c22ef9fca8c2a912d779c&jsName=quote_123&_g=0.8386441415641457";
-    public static String gbkCharset = "GBK";
+    //=======================================
+    //  KT file Solution parameters
+    //=======================================
+//    public static int increaseBlockStockCountCondition = 67;
+//    public static double increaseActiveStockRatio = 0.03;
+//    public static int increaseActiveStockCount = 2;
+//    public static int decreaseBlockStockCountCondition = 20;
+//    public static double decreaseActiveStockRatio = 0.1;
+//    public static int decreaseActiveStockCount = 2;
 
+    public static int increaseBlockStockCountCondition = 67;
+    public static double increaseActiveStockRatio = 0;
+    public static int increaseActiveStockCount = 0;
+    public static int decreaseBlockStockCountCondition = 20;
+    public static double decreaseActiveStockRatio = 0;
+    public static int decreaseActiveStockCount = 0;
+
+    //=======================================
+    // News Solution parameters
+    //=======================================
     // News related
     public static String newsCountsFilePrefix = "/Users/jianguog/other/yistock/newsCount";
     public static String newsCountsFile = YiConstants.newsCountsFilePrefix + DateUtils.getTodayString() + ".txt";

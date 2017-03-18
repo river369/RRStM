@@ -11,22 +11,34 @@ import java.util.*;
 /**
  * Created by jianguog on 17/3/5.
  */
-public class SelectStockModel {
+public class SelectStocksInBlocksModel {
 
-    final String[] attributeNames = {"priceRateToYesterdayFinish", "priceRateToTodayStart", "volumeRatio",  "turnOver"};
+    //final String[] attributeNames = {"priceRateToYesterdayFinish", "priceRateToTodayStart", "volumeRatio",  "turnOver"};
+    final String[] attributeNames = {"priceRateToTodayStart", "volumeRatio",  "turnOver"};
     double[] attributeValues = new double[attributeNames.length];
     // Key is stock name, values are the blocks that contain the stock
     TreeMap<String, HashSet<String>> commonStocksToBlocksMap;
+    // Key is stock
+    Map<String, RealTimeData> dfcfRealTimeDataMap;
 
-    public SelectStockModel(TreeMap<String, HashSet<String>> commonStocksToBlocksMap) {
+    public SelectStocksInBlocksModel(Map<String, RealTimeData> dfcfRealTimeDataMap, TreeMap<String, HashSet<String>> commonStocksToBlocksMap) {
         this.commonStocksToBlocksMap = commonStocksToBlocksMap;
+        this.dfcfRealTimeDataMap = dfcfRealTimeDataMap;
     }
 
     public List<Map.Entry<String, StockValues>> select(List<Map.Entry<String, BlockValues>> topBlockList) throws YiException{
         //1. get distinct blocks. Key is stock name, values are stock real time values
+        System.out.println("Getting all the stocks in the Major increase Blocks.");
         Map<String, StockValues> distinctStocks = getDistinctStocksWithRealtimeValues(topBlockList);
+        for (String stock : distinctStocks.keySet()) {
+            System.out.println("Got stocks in block, " + stock + "," + distinctStocks.get(stock));
+        }
         //2. select the top stocks with all of 4 kinds values in top 10%
+        System.out.println("Getting best the stocks in the Major increase Blocks.");
         List<Map.Entry<String, StockValues>> selectedStockList = selectBlocksWithRealtimeData(distinctStocks);
+        for (Map.Entry<String, StockValues> stockValuesEntry : selectedStockList) {
+            System.out.println("Got best stocks in block, " + stockValuesEntry.getKey() + "," + stockValuesEntry.getValue());
+        }
         return selectedStockList;
     }
 
@@ -37,11 +49,6 @@ public class SelectStockModel {
      * @throws YiException
      */
     Map<String, StockValues> getDistinctStocksWithRealtimeValues(List<Map.Entry<String, BlockValues>> topBlockList) throws YiException {
-        // 1. Get all stock infor from DFCF
-        DFCFRealTimeReader dfcfRealTimeReader = new DFCFRealTimeReader();
-        Map<String, RealTimeData> dfcfRealTimeDataMap= dfcfRealTimeReader.getDFCFRealTimeData();
-
-        // 2. Get distinct stock maps
         Map<String, StockValues> distinctStocks = new HashMap<String, StockValues>();
         for (Map.Entry<String, BlockValues> block : topBlockList) {
             //System.out.println(blockName + "," + block.getValue());

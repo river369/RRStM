@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Created by jianguog on 17/3/5.
  */
-public class SelectBlockModel {
+public class SelectFromKTFilesBlockModel {
     // key is stock code, value is stock name
     Map<String, String> allStocksMap;
     // Key is stock name, values are the blocks that contain the stock
@@ -20,9 +20,9 @@ public class SelectBlockModel {
     // Key is block name, values are stocks that belong to the block
     TreeMap<String, HashSet<String>> commonBlocksToStocksMap;
 
-    public SelectBlockModel(Map<String, String> allStocksMap,
-                            TreeMap<String, HashSet<String>> commonStocksToBlocksMap,
-                            TreeMap<String, HashSet<String>> commonBlocksToStocksMap) {
+    public SelectFromKTFilesBlockModel(Map<String, String> allStocksMap,
+                                       TreeMap<String, HashSet<String>> commonStocksToBlocksMap,
+                                       TreeMap<String, HashSet<String>> commonBlocksToStocksMap) {
         this.allStocksMap = allStocksMap;
         this.commonStocksToBlocksMap = commonStocksToBlocksMap;
         this.commonBlocksToStocksMap = commonBlocksToStocksMap;
@@ -39,7 +39,7 @@ public class SelectBlockModel {
         List<Map.Entry<String, BlockValues>> topBlockList = selectTopBlocksList();
         for (Map.Entry<String, BlockValues> mapping : topBlockList) {
             mapping.getValue().setStocksSet(commonBlocksToStocksMap.get(mapping.getKey()));
-            System.out.println("SelectBlockModel:select(),"+ mapping.getKey() + "," + mapping.getValue());
+            System.out.println("SelectFromKTFilesBlockModel:select(),"+ mapping.getKey() + "," + mapping.getValue());
         }
 
         return topBlockList;
@@ -119,7 +119,7 @@ public class SelectBlockModel {
             throw new YiException(ExceptionHandler.PRE_SELECTED_STOCKS_TOO_LITTLE);
         }
         for (String stock : preSelectedStocksToBlocksMap.keySet()){
-            System.out.println("SelectBlockModel:selectBlocksListWithPreSelectedStocks(),"+ stock + "," + preSelectedStocksToBlocksMap.get(stock));
+            System.out.println("SelectFromKTFilesBlockModel:selectBlocksListWithPreSelectedStocks(),"+ stock + "," + preSelectedStocksToBlocksMap.get(stock));
         }
 
         //Key is block name, Values are the stocks count that the block contains
@@ -146,7 +146,7 @@ public class SelectBlockModel {
             throw new YiException(ExceptionHandler.PRE_SELECTED_BLOCKS_TOO_LITTLE);
         }
         for (String block : preSelectedBlockToStockCountMap.keySet()){
-            System.out.println("SelectBlockModel:selectBlocksListWithPreSelectedStocks(),"+ block + "," + preSelectedBlockToStockCountMap.get(block));
+            System.out.println("SelectFromKTFilesBlockModel:selectBlocksListWithPreSelectedStocks(),"+ block + "," + preSelectedBlockToStockCountMap.get(block));
         }
         return preSelectedBlockToStockCountMap;
     }
@@ -159,8 +159,8 @@ public class SelectBlockModel {
             BlockData commonBlockData = commonBlockInfoReader.getBlockData();
             TreeMap<String, HashSet<String>> commonStocksToBlocksMap = commonBlockData.getDistinctStocksToBlocksMap(allStocksMap);
             TreeMap<String, HashSet<String>> commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);
-            SelectBlockModel selectBlockModel = new SelectBlockModel(allStocksReader.getStocksMap(), commonStocksToBlocksMap, commonBlocksToStocksMap);
-            selectBlockModel.select();
+            SelectFromKTFilesBlockModel selectFromKTFilesBlockModel = new SelectFromKTFilesBlockModel(allStocksReader.getStocksMap(), commonStocksToBlocksMap, commonBlocksToStocksMap);
+            selectFromKTFilesBlockModel.select();
         } catch (YiException e) {
             e.printStackTrace();
         }

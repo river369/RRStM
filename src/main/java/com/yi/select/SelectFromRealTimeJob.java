@@ -1,26 +1,31 @@
 package com.yi.select;
 
-import com.yi.EnvConstants;
-import com.yi.YiConstants;
-import com.yi.base.CommonFramework;
+import com.yi.base.CommonJob;
 import com.yi.db.Selection;
-import com.yi.db.SelectionItem;
 import com.yi.db.SelectionDao;
+import com.yi.db.SelectionItem;
 import com.yi.exception.ExceptionHandler;
 import com.yi.exception.YiException;
 import com.yi.stocks.AllStocksReader;
 import com.yi.utils.DateUtils;
-import com.yi.utils.OSSUtil;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by jianguog on 17/3/7.
+ * Select stocks with Sys solutions
+ * 第1轮：选强势股
+     根据实时数据四个参数中的后三个选出领涨股（涨幅排名为前10％，turnover，volumeratio也前10%大），
+     选出领跌股（跌幅排名为后10％，turnover，volumeratio也前10%大））
+   第2轮：选强势板块
+     选出领涨板块，条件（该版块总股数目大于67个时，领涨股要占3%以上。不足67个时候，领涨股要>=2)
+     选出领跌板块，条件（该版块总股数目大于20个时，领跌股要占10%以上。不足20个时候，领跌股要>=2)
+     从领涨板块中剔除那些同时也是领跌板块的板块。
+ * 第三轮：同
  */
-public class SelectFramework extends CommonFramework {
-    public SelectFramework(boolean alwayRun) {
+public class SelectFromRealTimeJob extends CommonJob {
+    public SelectFromRealTimeJob(boolean alwayRun) {
         super(alwayRun);
     }
 
@@ -45,12 +50,9 @@ public class SelectFramework extends CommonFramework {
             checkTime();
             long selection_id = System.currentTimeMillis();
             try {
-                // 2. download the preselected file
                 System.out.println("Selecting at " + DateUtils.getCurrentTimeToSecondString() + " , selection id is " + selection_id);
-                getPreselectedFiles();
-
                 // 3. select the best blocks
-                SelectModel selectModel = new SelectModel();
+                SelectFromRealtimeModel selectModel = new SelectFromRealtimeModel();
                 stockOutputList = selectModel.select(allStocksMap);
 
             } catch (YiException e) {
@@ -61,24 +63,6 @@ public class SelectFramework extends CommonFramework {
             sleep(5000);
         }
 
-    }
-
-    void getPreselectedFiles(){
-        String[] filesToDownLoad = {YiConstants.localPreSelectedBlockFileName, YiConstants.localBlockInfoFileName};
-        for (String fileName : filesToDownLoad ) {
-            String ossKey = EnvConstants.OSS_KT_PREFIX + fileName;
-            while (! OSSUtil.exist(ossKey) ) {
-                System.out.println("Cannot fine OSS file " + ossKey);
-                sleep(5000);
-            }
-            while ( !alwayRun &&
-                    !DateUtils.isToday(OSSUtil.getSimplifiedObjectMeta(EnvConstants.OSS_KT_PREFIX + YiConstants.localPreSelectedBlockFileName)
-                            .getLastModified())) {
-                System.out.println("There are no file upload for " + ossKey + " today.");
-                sleep(5000);
-            }
-            OSSUtil.getObject(ossKey, new File(YiConstants.getSelectorPath() + fileName ));
-        }
     }
 
     void processingOutputs (long selection_id, List<StockOutput> stockOutputList,  String msg) {
@@ -127,7 +111,7 @@ public class SelectFramework extends CommonFramework {
             alwaysRun = false;
         }
         //System.out.println(alwaysRun);
-        SelectFramework selectFramework = new SelectFramework(alwaysRun);
+        SelectFromRealTimeJob selectFramework = new SelectFromRealTimeJob(alwaysRun);
         selectFramework.run();
     }
 }

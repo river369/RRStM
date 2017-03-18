@@ -1,6 +1,6 @@
 package com.yi.select;
 
-import com.yi.base.CommonFramework;
+import com.yi.base.CommonJob;
 import com.yi.db.SelectionDao;
 import com.yi.db.SelectionItem;
 import com.yi.db.SelectionItemRealTime;
@@ -12,14 +12,15 @@ import com.yi.utils.DateUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created by jianguog on 17/3/7.
+ *
+ * Query the real time data of selected stocks for analysis
  */
-public class SelectItemRealTimeFramework extends CommonFramework {
+public class SelectItemRealTimeJob extends CommonJob {
 
-    public SelectItemRealTimeFramework(boolean alwayRun) {
+    public SelectItemRealTimeJob(boolean alwayRun) {
         super(alwayRun);
     }
 
@@ -63,7 +64,7 @@ public class SelectItemRealTimeFramework extends CommonFramework {
             alwaysRun = false;
         }
         //System.out.println(alwaysRun);
-        SelectItemRealTimeFramework selectItemRealTimeFramework = new SelectItemRealTimeFramework(alwaysRun);
+        SelectItemRealTimeJob selectItemRealTimeFramework = new SelectItemRealTimeJob(alwaysRun);
         selectItemRealTimeFramework.run();
     }
 }

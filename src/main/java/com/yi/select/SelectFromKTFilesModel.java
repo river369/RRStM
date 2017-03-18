@@ -4,13 +4,15 @@ import com.yi.YiConstants;
 import com.yi.blocks.BlockData;
 import com.yi.blocks.BlockInfoReader;
 import com.yi.exception.YiException;
+import com.yi.realtime.DFCFRealTimeReader;
+import com.yi.realtime.RealTimeData;
 
 import java.util.*;
 
 /**
  * Created by jianguog on 17/3/7.
  */
-public class SelectModel {
+public class SelectFromKTFilesModel {
 
     /**
      *
@@ -26,14 +28,16 @@ public class SelectModel {
         TreeMap<String, HashSet<String>> commonBlocksToStocksMap = commonBlockData.getDistinctBlocksToStocksMap(allStocksMap);
 
         // 1. select the best blocks base on preselected stocks
-        SelectBlockModel selectBlockModel = new SelectBlockModel(allStocksMap, commonStocksToBlocksMap, commonBlocksToStocksMap);
-        List<Map.Entry<String, BlockValues>> topBlockList = selectBlockModel.select();
+        SelectFromKTFilesBlockModel selectFromKTFilesBlockModel = new SelectFromKTFilesBlockModel(allStocksMap, commonStocksToBlocksMap, commonBlocksToStocksMap);
+        List<Map.Entry<String, BlockValues>> topBlockList = selectFromKTFilesBlockModel.select();
 
         // 2. Select the best stocks in the best blocks
-        SelectStockModel selectStockModel = new SelectStockModel(commonStocksToBlocksMap);
-        List<Map.Entry<String, StockValues>> selectedStockList = selectStockModel.select(topBlockList);
+        DFCFRealTimeReader dfcfRealTimeReader = new DFCFRealTimeReader();
+        Map<String, RealTimeData> dfcfRealTimeDataMap= dfcfRealTimeReader.getDFCFRealTimeData();
+        SelectStocksInBlocksModel selectStocksInBlocksModel = new SelectStocksInBlocksModel(dfcfRealTimeDataMap, commonStocksToBlocksMap);
+        List<Map.Entry<String, StockValues>> selectedStockList = selectStocksInBlocksModel.select(topBlockList);
 
-        // 3 orgnize the output data
+        // 3. orgnize the output data
         List<StockOutput> stockOutputsList = new ArrayList<StockOutput>();
         for (int i = 0 ; i < selectedStockList.size(); i++) {
             String stockId = selectedStockList.get(i).getKey();
