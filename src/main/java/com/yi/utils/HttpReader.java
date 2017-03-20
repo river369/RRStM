@@ -57,6 +57,7 @@ public class HttpReader {
         } catch (Exception e) {
             System.out.println("发送GET请求出现异常！" + e);
             e.printStackTrace();
+            result = "";
         }
         // 使用finally块来关闭输入流
         finally {
@@ -72,7 +73,20 @@ public class HttpReader {
     }
 
     public static String sendGet(String url, String param) {
-        return HttpReader.sendGet( url, param, null);
+
+        for (int i = 0; i < 3; i++){
+            String response = HttpReader.sendGet( url, param, null);
+            if (null != response && !"".equalsIgnoreCase(response)) {
+                return response;
+            } else {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
     /**

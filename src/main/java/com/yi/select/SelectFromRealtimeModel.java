@@ -32,7 +32,8 @@ public class SelectFromRealtimeModel {
         Map<String, RealTimeData> dfcfRealTimeDataMap = dfcfRealTimeReader.getDFCFRealTimeData();
 
         // 1 select best stock then select best block
-        SelectFromRealtimeStrongStocksModel selectFromRealtimeStrongStocksModel = new SelectFromRealtimeStrongStocksModel(allStocksMap, dfcfRealTimeDataMap);
+        SelectFromRealtimeStrongStocksModel selectFromRealtimeStrongStocksModel =
+                new SelectFromRealtimeStrongStocksModel(allStocksMap, commonStocksToBlocksMap, dfcfRealTimeDataMap);
         SelectFromRealTimeBlockModel selectFromRealTimeBlockModel = new SelectFromRealTimeBlockModel(commonStocksToBlocksMap, commonBlocksToStocksMap);
 
         System.out.println("Getting Major increase Stocks!");

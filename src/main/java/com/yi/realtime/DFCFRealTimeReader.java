@@ -32,11 +32,15 @@ public class DFCFRealTimeReader {
     public Map<String, RealTimeData> getDFCFRealTimeData() throws YiException{
         List<Integer> newsCountList = new ArrayList<Integer>();
         String response = HttpReader.sendGet(YiConstants.dfcfURL,YiConstants.dfcfParameter);
-        return parseNewsCountString(response);
+        return parseRealTimeString(response);
         //System.out.println(response);
     }
 
-    public Map<String, RealTimeData> parseNewsCountString(String html) throws YiException {
+    public Map<String, RealTimeData> parseRealTimeString(String html) throws YiException {
+        if ( null == html) {
+            throw new YiException(ExceptionHandler.DFCF_REAL_TIME_STOCKS_DATA_EXCEPTION);
+
+        }
         String jsonarra=html.split("rank:")[1].split(",pages")[0];
         String stocks[]=jsonarra.split("\",");
         Map<String, RealTimeData> stockRealTimeMap = new HashMap<String, RealTimeData>();

@@ -70,19 +70,19 @@ public class YiConstants {
     //=======================================
     //  KT file Solution parameters
     //=======================================
-//    public static int increaseBlockStockCountCondition = 67;
-//    public static double increaseActiveStockRatio = 0.03;
-//    public static int increaseActiveStockCount = 2;
-//    public static int decreaseBlockStockCountCondition = 20;
-//    public static double decreaseActiveStockRatio = 0.1;
-//    public static int decreaseActiveStockCount = 2;
-
     public static int increaseBlockStockCountCondition = 67;
-    public static double increaseActiveStockRatio = 0;
-    public static int increaseActiveStockCount = 0;
+    public static double increaseActiveStockRatio = 0.03;
+    public static int increaseActiveStockCount = 2;
     public static int decreaseBlockStockCountCondition = 20;
-    public static double decreaseActiveStockRatio = 0;
-    public static int decreaseActiveStockCount = 0;
+    public static double decreaseActiveStockRatio = 0.1;
+    public static int decreaseActiveStockCount = 2;
+
+//    public static int increaseBlockStockCountCondition = 67;
+//    public static double increaseActiveStockRatio = 0;
+//    public static int increaseActiveStockCount = 0;
+//    public static int decreaseBlockStockCountCondition = 20;
+//    public static double decreaseActiveStockRatio = 0;
+//    public static int decreaseActiveStockCount = 0;
 
     //=======================================
     // News Solution parameters

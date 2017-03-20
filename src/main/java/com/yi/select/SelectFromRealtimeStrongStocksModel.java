@@ -21,10 +21,15 @@ public class SelectFromRealtimeStrongStocksModel {
     Map<String, String> allStocksMap;
     // key is stock, value is real time data
     Map<String, RealTimeData> dfcfRealTimeDataMap;
+    // Key is stock, value is blocks
+    TreeMap<String, HashSet<String>> commonStocksToBlocksMap;
 
-    public SelectFromRealtimeStrongStocksModel(Map<String, String> allStocksMap, Map<String, RealTimeData> dfcfRealTimeDataMap) {
+    public SelectFromRealtimeStrongStocksModel(Map<String, String> allStocksMap,
+                                               TreeMap<String, HashSet<String>> commonStocksToBlocksMap,
+                                               Map<String, RealTimeData> dfcfRealTimeDataMap) {
         this.allStocksMap = allStocksMap;
         this.dfcfRealTimeDataMap = dfcfRealTimeDataMap;
+        this.commonStocksToBlocksMap = commonStocksToBlocksMap;
     }
 
     public List<Map.Entry<String, StockValues>> select(boolean isStrongGrow) throws YiException{
@@ -95,6 +100,13 @@ public class SelectFromRealtimeStrongStocksModel {
             RealTimeData realTimeData = dfcfRealTimeDataMap.get(stock);
             StockValues stockValues = new StockValues(realTimeData.getPrice(), realTimeData.getYesterdayFinishPrice(),
                     realTimeData.getTodayStartPrice(), realTimeData.getVolumeRatio(), realTimeData.getTurnOver());
+            if (commonStocksToBlocksMap.containsKey("SZ"+stock)){
+                stockValues.setBelongToBlocks(commonStocksToBlocksMap.get("SZ"+stock));
+            }
+            if (commonStocksToBlocksMap.containsKey("SH"+stock)){
+                stockValues.setBelongToBlocks(commonStocksToBlocksMap.get("SH"+stock));
+            }
+
             if (isStrongGrow && (realTimeData.getPrice() > realTimeData.getTodayStartPrice())) {
                 //System.out.println(stock + "," + stockValues);
                 distinctStocks.put(stock, stockValues);
@@ -117,7 +129,7 @@ public class SelectFromRealtimeStrongStocksModel {
             }
             //System.out.println(allStocksMap.size());
             SelectFromRealtimeStrongStocksModel selectFromRealtimeStrongStocksModel = new SelectFromRealtimeStrongStocksModel(
-                    allStocksMap, dfcfRealTimeDataMap);
+                    allStocksMap, null, dfcfRealTimeDataMap);
             List<Map.Entry<String, StockValues>> stockList = selectFromRealtimeStrongStocksModel.select(true);
             System.out.println("Major increase!");
             for (Map.Entry<String, StockValues> stockEntry : stockList) {

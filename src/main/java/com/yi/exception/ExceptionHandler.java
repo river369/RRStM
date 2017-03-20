@@ -11,6 +11,7 @@ public class ExceptionHandler {
     public static String PRE_SELECTED_BLOCKS_TOO_LITTLE = "选股没有完成，可选板块量太少.";
     public static String SELECTED_BLOCKS_TOO_LITTLE = "二次板块选取没有完成，选出板块量太少.";
     public static String DFCF_REAL_TIME_STOCKS_COUNT_TOO_LOW = "DFCF实时股票数量异常.";
+    public static String DFCF_REAL_TIME_STOCKS_DATA_EXCEPTION = "DFCF实时股票数据异常.";
 
     public static String REALTIME_AVAILAVLE_BLOCKS_TOO_LITTLE = "实时选股没有完成，板块中股票量太少.";
 
