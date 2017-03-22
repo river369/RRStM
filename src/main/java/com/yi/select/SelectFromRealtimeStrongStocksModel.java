@@ -33,7 +33,15 @@ public class SelectFromRealtimeStrongStocksModel {
     }
 
     public List<Map.Entry<String, StockValues>> select(boolean isStrongGrow) throws YiException{
+
+        List<Map.Entry<String, StockValues>> selectedStocksList = new ArrayList<Map.Entry<String, StockValues>>();
+
         Map<String, StockValues> allRealtimeStockMap = prepareStockMap(isStrongGrow);
+
+        if (allRealtimeStockMap == null || allRealtimeStockMap.size() == 0) {
+            System.out.println("Exception in SelectFromRealtimeStrongStocksModel : get nothing for " + isStrongGrow);
+            return selectedStocksList;
+        }
 
         // 1. set attributeValues[] values with top bestRealTimeStocksByRatio 10 percent
         //    if strong decrease, use 90 percent
@@ -60,8 +68,7 @@ public class SelectFromRealtimeStrongStocksModel {
 
         // 2. select best stocks with all of the column are better than values in attributeValues[],
         //    if strong decrease, use 90 percent, get the smallest values which is the most decrease
-        List<Map.Entry<String, StockValues>> selectedStocksList = new ArrayList<Map.Entry<String, StockValues>>();
-        for (Map.Entry<String, StockValues> stockEntry : stockEntryList){
+        for (Map.Entry<String, StockValues> stockEntry : stockEntryList) {
             boolean isAllMatch = true;
             for (int i = 0; i < attributeNames.length; i++) {
                 final String attributeName = attributeNames[i];

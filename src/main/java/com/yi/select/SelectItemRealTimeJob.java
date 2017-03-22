@@ -38,6 +38,9 @@ public class SelectItemRealTimeJob extends CommonJob {
                 List<SelectionItem> selectionItemList = selectionDao.getSelectedStockInXDaysBefore(-2);
                 for (SelectionItem selectionItem : selectionItemList){
                     RealTimeData realTimeData = dfcfRealTimeDataMap.get(selectionItem.getStock_id().substring(2));
+                    if (realTimeData == null) {
+                        continue;
+                    }
                     System.out.println(selectionItem.getStock_id() + "," + realTimeData);
                     SelectionItemRealTime selectionItemRealTime = new SelectionItemRealTime();
                     selectionItemRealTime.setStock_id(selectionItem.getStock_id());

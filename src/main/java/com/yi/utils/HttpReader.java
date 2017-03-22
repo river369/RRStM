@@ -76,7 +76,7 @@ public class HttpReader {
 
         for (int i = 0; i < 3; i++){
             String response = HttpReader.sendGet( url, param, null);
-            if (null != response && !"".equalsIgnoreCase(response)) {
+            if ((null != response) && !("".equalsIgnoreCase(response))) {
                 return response;
             } else {
                 try {

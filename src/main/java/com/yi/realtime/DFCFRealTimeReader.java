@@ -49,6 +49,10 @@ public class DFCFRealTimeReader {
             try {
                 String row = stocks[i].replace("[\"", "").replace("\"", "").replace("]", "");
                 String[] colums = row.split(",");
+                if(colums.length < 25) {
+                    System.out.println("Exception in DFCFRealTimeReader: get nothing for rows " + row);
+                    continue;
+                }
                 RealTimeData realTimeData = new RealTimeData();
                 realTimeData.setTimeInSecond(DateUtils.getCurrentTimeToSecondString());
                 realTimeData.setId(colums[1]);
