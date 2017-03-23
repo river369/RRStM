@@ -94,7 +94,7 @@ public class SelectFromRealTimeJob extends CommonJob {
                 selectionItem.setToday_start_price(stockValues.getTodayStartPrice());
                 selectionItem.setVolume_ratio(stockValues.getVolumeRatio());
                 selectionItem.setTurn_over(stockValues.getTurnOver());
-                selectionDao.insertSelectionItem(selectionItem);
+                //selectionDao.insertSelectionItem(selectionItem);
             }
         }
     }

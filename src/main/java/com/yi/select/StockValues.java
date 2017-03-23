@@ -115,6 +115,8 @@ public class StockValues {
                 ", todayStartPrice=" + todayStartPrice +
                 ", volumeRatio=" + volumeRatio +
                 ", turnOver=" + turnOver +
+                ", priceRateToYesterdayFinish=" + getPriceRateToYesterdayFinish() +
+                ", priceRateToTodayStart=" + getPriceRateToTodayStart() +
                 ", drivenByBlocks=" + drivenByBlocks +
                 ", belongToBlocks=" + belongToBlocks +
                 ']';

@@ -67,6 +67,8 @@ public class YiConstants {
     public static int minDFCFRealTimeStockCount = 1000;
     public static int maxDFCFRealTimeStockSkipCount = 1000;
 
+    public static double filterOutRateForAlreadyIncreasedTooMuch = 0.05;
+
     //=======================================
     //  KT file Solution parameters
     //=======================================

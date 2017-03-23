@@ -33,7 +33,7 @@ public class SelectStocksInBlocksModel {
         for (String stock : distinctStocks.keySet()) {
             System.out.println("Got stocks in block, " + stock + "," + distinctStocks.get(stock));
         }
-        //2. select the top stocks with all of 4 kinds values in top 10%
+        //2. select the top stocks with all of 3 kinds values in top 10%
         System.out.println("Getting best the stocks in the Major increase Blocks.");
         List<Map.Entry<String, StockValues>> selectedStockList = selectBlocksWithRealtimeData(distinctStocks);
         for (Map.Entry<String, StockValues> stockValuesEntry : selectedStockList) {
@@ -103,8 +103,13 @@ public class SelectStocksInBlocksModel {
                 }
             }
             if (isAllMatch) {
-                //System.out.println(stockEntry.getKey() + "," + stockEntry.getValue());
-                selectedStocksList.add(stockEntry);
+                if ((stockEntry.getValue().getPriceRateToYesterdayFinish() - 1) > YiConstants.filterOutRateForAlreadyIncreasedTooMuch ||
+                        (stockEntry.getValue().getPriceRateToTodayStart() - 1) > YiConstants.filterOutRateForAlreadyIncreasedTooMuch) {
+                    System.out.println("Skip best stock that increased too much," + stockEntry.getKey() + "," + stockEntry.getValue() );
+                } else {
+                    //System.out.println(stockEntry.getKey() + "," + stockEntry.getValue());
+                    selectedStocksList.add(stockEntry);
+                }
             }
         }
 
