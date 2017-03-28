@@ -11,12 +11,14 @@ import java.util.GregorianCalendar;
 public class DateUtils {
 
     public static void main(String[] args) {
-        System.out.println(System.currentTimeMillis());
-        System.out.println(getTodayString());
-        System.out.println(getYesterdayString());
-        System.out.println(getCurrentTimeToSecondString());
-        System.out.println(getCurrentTimeToMinuteString());
-        System.out.println(getCurrentHour());
+
+//        System.out.println(System.currentTimeMillis());
+//        System.out.println(getTodayString());
+//        System.out.println(getYesterdayString());
+//        System.out.println(getCurrentTimeToSecondString());
+//        System.out.println(getCurrentTimeToMinuteString());
+//        System.out.println(getCurrentHour());
+//        System.out.println(getCurrentMinutes());
     }
 
     public static String getTodayString(){
@@ -28,7 +30,7 @@ public class DateUtils {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = df.format(date);
         //System.out.println(dateString);
-        //System.out.println(DateUtils.getTodayString());
+        //System.out.println(LeadTimeDateUtils.getTodayString());
         return dateString.equalsIgnoreCase(DateUtils.getTodayString());
     }
 
@@ -69,5 +71,9 @@ public class DateUtils {
         return Integer.parseInt(df.format(new Date()));
     }
 
+    public static int getCurrentMinutes(){
+        SimpleDateFormat df = new SimpleDateFormat("mm");
+        return Integer.parseInt(df.format(new Date()));
+    }
 
 }

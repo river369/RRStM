@@ -32,7 +32,7 @@ public class SelectionDao {
 
     public List<SelectionItem> getSelectedStockInXDaysBefore(int days) {
         SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession();
-        //System.out.println(DateUtils.getDaysString(days));
+        //System.out.println(LeadTimeDateUtils.getDaysString(days));
         List<SelectionItem> selectionItemList = session.selectList("com.yi.db.SelectionItem.selectDistinctSelectionItems", DateUtils.getDaysString(days));
         session.close();
         return selectionItemList;
