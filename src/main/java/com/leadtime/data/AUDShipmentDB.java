@@ -1,4 +1,4 @@
-package com.leadtime;
+package com.leadtime.data;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

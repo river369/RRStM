@@ -1,4 +1,6 @@
-package com.leadtime;
+package com.leadtime.data;
+
+import com.leadtime.utils.LeadTimeDateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,8 +20,8 @@ public class AUDShipmentDW {
     Date shipDate;
     Date rsd;
     double processingTime;
+    double processingTimeMinusWeekend;
     int leadtime;
-    int preleadtime;
 
     public AUDShipmentDW(String line) {
         String[] colums = line.split("\t");
@@ -41,11 +43,13 @@ public class AUDShipmentDW {
             this.shipDate  = dt.parse(colums[0]);
             this.rsd  = dt.parse(colums[9]);
             //System.out.println(this.shipDate.getTime() + "--" + this.ofDate.getTime());
-            this.processingTime = (this.shipDate.getTime() - this.ofDate.getTime())/(60*60*1000.0) ;
+            this.processingTime = (this.shipDate.getTime() - this.ofDate.getTime())/(60*60*1000.0);
+            this.processingTimeMinusWeekend = LeadTimeDateUtils.filterOutWeekend(ofDate, shipDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public String toString() {
@@ -59,7 +63,10 @@ public class AUDShipmentDW {
                 "," + df.format(shipDate) +
                 "," + df.format(rsd) +
                 "," + processingTime +
-                "," + getRange(processingTime);
+                "," + processingTimeMinusWeekend +
+                "," + getRange(processingTimeMinusWeekend) +
+                "," + leadtime +
+                "," + this.getPreleadtime();
     }
 
     int getRange(double pt){
@@ -98,6 +105,40 @@ public class AUDShipmentDW {
         }
         if (pt > 1007) {
             return 2000;
+        }
+        return -1;
+    }
+
+    public int getPreleadtime() {
+        if (leadtime <=23) {
+            return 0;
+        }
+        if (leadtime <= 47) {
+            return 23;
+        }
+        if (leadtime <= 71) {
+            return 47;
+        }
+        if (leadtime <= 119) {
+            return 71;
+        }
+        if (leadtime <= 335) {
+            return 119;
+        }
+        if (leadtime <= 503) {
+            return 335;
+        }
+        if (leadtime <= 671) {
+            return 503;
+        }
+        if (leadtime <= 839) {
+            return 503;
+        }
+        if (leadtime <= 1007) {
+            return 671;
+        }
+        if (leadtime == 2000) {
+            return 1007;
         }
         return -1;
     }
@@ -182,11 +223,11 @@ public class AUDShipmentDW {
         this.leadtime = leadtime;
     }
 
-    public int getPreleadtime() {
-        return preleadtime;
+    public double getProcessingTimeMinusWeekend() {
+        return processingTimeMinusWeekend;
     }
 
-    public void setPreleadtime(int preleadtime) {
-        this.preleadtime = preleadtime;
+    public void setProcessingTimeMinusWeekend(double processingTimeMinusWeekend) {
+        this.processingTimeMinusWeekend = processingTimeMinusWeekend;
     }
 }

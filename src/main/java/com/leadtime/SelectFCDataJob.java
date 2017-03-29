@@ -1,5 +1,9 @@
 package com.leadtime;
 
+import com.leadtime.data.AUDShipmentDW;
+import com.leadtime.data.NodeLeadtime;
+import com.leadtime.data.NodeLeadtimeRange;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +37,7 @@ public class SelectFCDataJob {
     }
 
     public void checkShipment(File file) throws IOException {
-        fcs.add("AHER");
+        fcs.add("CNSI");
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
 

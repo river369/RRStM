@@ -1,5 +1,9 @@
 package com.leadtime;
 
+import com.leadtime.data.AUDShipmentDW;
+import com.leadtime.data.NodeLeadtime;
+import com.leadtime.data.NodeLeadtimeRange;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -55,7 +59,7 @@ public class LeadTimeDistributionJob {
                 nodeLeadtimeRange.setNode(audShipment.getNode());
                 leadtimeRangeMap.put(audShipment.getNode(), nodeLeadtimeRange);
             }
-            nodeLeadtimeRange.setData(audShipment.getProcessingTime());
+            nodeLeadtimeRange.setData(audShipment.getProcessingTimeMinusWeekend());
             //System.out.println(line);
             //System.out.println(audShipment);
         }

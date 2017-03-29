@@ -1,4 +1,4 @@
-package com.leadtime;
+package com.leadtime.data;
 
 /**
  * Created by jianguog on 17/3/28.

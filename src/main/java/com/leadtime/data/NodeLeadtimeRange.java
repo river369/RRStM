@@ -1,7 +1,17 @@
-package com.leadtime;
+package com.leadtime.data;
 
 /**
  * Created by jianguog on 17/3/28.
+ 23	    24	24 hours
+ 47	    48	1-2 days
+ 71	    72	2-3 days
+ 119	120	3-5 days
+ 167	168	5-7 days
+ 335	336	1-2 weeks
+ 503	504	2-3 weeks
+ 671	672	3-4 weeks
+ 839	840	3-5 weeks
+ 1007	1008	4-6 weeks
  */
 public class NodeLeadtimeRange {
     String node;
@@ -19,18 +29,9 @@ public class NodeLeadtimeRange {
     int l839;
     int l1007;
     int upper;
-//23	24	24 hours
-//47	48	1-2 days
-//71	72	2-3 days
-//119	120	3-5 days
-//167	168	5-7 days
-//335	336	1-2 weeks
-//503	504	2-3 weeks
-//671	672	3-4 weeks
-//839	840	3-5 weeks
-//1007	1008	4-6 weeks
 
-    void setData(double pt){
+
+    public void setData(double pt){
         if (pt < 6) {
             l0++;
         }
@@ -68,7 +69,7 @@ public class NodeLeadtimeRange {
             upper++;
         }
     }
-    int getLeadTimeKinds(){
+    public int getLeadTimeKinds(){
         int i = 0;
         if (l0 > 0) {
             i++;
@@ -106,7 +107,7 @@ public class NodeLeadtimeRange {
         }
         return i;
     }
-    int getTotalShipmentCount(){
+    public int getTotalShipmentCount(){
         return l0 + l23 + l47 + l71 + l119
                 +l167+l335+l503+l671+l839+l1007 + upper;
     }
