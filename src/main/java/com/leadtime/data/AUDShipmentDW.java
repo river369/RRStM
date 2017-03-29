@@ -22,6 +22,7 @@ public class AUDShipmentDW {
     double processingTime;
     double processingTimeMinusWeekend;
     int leadtime;
+    String sortType;
 
     public AUDShipmentDW(String line) {
         String[] colums = line.split("\t");
@@ -64,12 +65,15 @@ public class AUDShipmentDW {
                 "," + df.format(rsd) +
                 "," + processingTime +
                 "," + processingTimeMinusWeekend +
-                "," + getRange(processingTimeMinusWeekend) +
+                "," + getRange() +
                 "," + leadtime +
-                "," + this.getPreleadtime();
+                "," + getPreleadtime() +
+                "," + sortType;
+
     }
 
-    int getRange(double pt){
+    public int getRange(){
+        double pt = processingTimeMinusWeekend;
         if (pt < 6) {
             return 0;
         }
@@ -141,6 +145,14 @@ public class AUDShipmentDW {
             return 1007;
         }
         return -1;
+    }
+
+    public String getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
     }
 
     public String getGlcode() {

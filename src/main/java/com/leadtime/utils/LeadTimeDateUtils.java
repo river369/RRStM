@@ -16,25 +16,23 @@ public class LeadTimeDateUtils {
 
             Date start = dt.parse("2017/03/21 13:12:24");
             Date end = dt.parse("2017/03/23 13:12:24");
-            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//48
+//            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//48
+//
+//            start = dt.parse("2017/03/24 13:12:24");
+//            end = dt.parse("2017/03/27 13:12:24");
+//            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//24
+//
+//            start = dt.parse("2017/03/25 13:12:24");
+//            end = dt.parse("2017/03/29 13:12:24");
+//            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//61
+//
+//            start = dt.parse("2017/03/26 13:12:24");
+//            end = dt.parse("2017/03/27 13:12:24");
+//            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//24
 
-            start = dt.parse("2017/03/24 13:12:24");
-            end = dt.parse("2017/03/27 13:12:24");
-            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//24
-
-            start = dt.parse("2017/03/25 13:12:24");
-            end = dt.parse("2017/03/29 13:12:24");
-            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//61
-
-            start = dt.parse("2017/03/26 13:12:24");
-            end = dt.parse("2017/03/27 13:12:24");
-            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//13
-
-//            start = dt.parse("2017/03/12 23:30:54");
-//            end = dt.parse("2017/03/15 12:16:36");
-//            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//13
-//            	2256616721083	107-8967533-4969869	2017/03/12 19:27:17	ADGD	B005HSGXG0	196	gl_furniture	1	2017/03/20 09:00:00
-//            2256616721083,ADGD,B005HSGXG0,196,gl_furniture,2017-03-12 23:30:54,2017-03-15 12:16:36,2017-03-20 09:00:00,60.76166666666666,48.76166666666666,71,0,0
+            start = dt.parse("2017/03/18 20:12:36");
+            end = dt.parse("2017/03/20 13:13:22");
+            System.out.println(LeadTimeDateUtils.filterOutWeekend(start, end));//41
         } catch (ParseException e) {
             e.printStackTrace();
         }

@@ -5,11 +5,20 @@ package com.leadtime.data;
  */
 public class Evaulation {
     String key;
-    String selectedLeadtime;
+    int selectedLeadtime;
     int better;
     int worse;
     int total;
 
+    public void addTotal() {
+        this.total++;
+    }
+    public void addWorse() {
+        this.worse++;
+    }
+    public void addBetter() {
+        this.better++;
+    }
     public Evaulation(String key) {
         this.key = key;
     }
@@ -22,11 +31,11 @@ public class Evaulation {
         this.key = key;
     }
 
-    public String getSelectedLeadtime() {
+    public int getSelectedLeadtime() {
         return selectedLeadtime;
     }
 
-    public void setSelectedLeadtime(String selectedLeadtime) {
+    public void setSelectedLeadtime(int selectedLeadtime) {
         this.selectedLeadtime = selectedLeadtime;
     }
 
@@ -54,5 +63,13 @@ public class Evaulation {
         this.total = total;
     }
 
-
+    @Override
+    public String toString() {
+        return key +
+                "," + selectedLeadtime +
+                "," + better +
+                "," + worse +
+                "," + (better+worse) +
+                "," + total;
+    }
 }
