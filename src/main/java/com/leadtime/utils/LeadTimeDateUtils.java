@@ -81,7 +81,7 @@ public class LeadTimeDateUtils {
     public static double filterOutWeekend(Date start, Date end){
 
         double processingTime = (end.getTime() - start.getTime())/(60*60*1000.0);
-        if (processingTime > 7*24 || processingTime < 48) {
+        if (processingTime > 7*24 || processingTime < 24) {
             return processingTime;
         }
         double processingTimeMinusWeekend = processingTime;

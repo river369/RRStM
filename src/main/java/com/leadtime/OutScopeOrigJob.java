@@ -9,13 +9,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by jianguog on 17/3/28.
  */
 public class OutScopeOrigJob {
-
+    Set<String> fcs = new HashSet<String>();
+    Map<Integer, Integer> worseMap = new HashMap<Integer, Integer>();
     Map<String, NodeLeadtime> leadtimeMap = new HashMap<String, NodeLeadtime>();
     Map<String, NodeLeadtimeOutScope> outMap = new HashMap<String, NodeLeadtimeOutScope>();
 
@@ -35,6 +38,21 @@ public class OutScopeOrigJob {
         }
     }
 
+    public OutScopeOrigJob() {
+        String[] qudsiArray = new String[]{"AFMT","AFMU","AFMV","AEEV","AEEX","AEEW","ACPH", "ADBX", "ACPI"};
+        String[] wootArray = new String[] {"VUXA","AAMS","AGSL"} ;
+        String[] ingramArray = new String[] {"AZOT"} ;
+        for(String s : qudsiArray){
+            fcs.add(s);
+        }
+        for(String s : wootArray){
+            fcs.add(s);
+        }
+        for(String s : ingramArray){
+            fcs.add(s);
+        }
+    }
+
     public void checkShipment(File file) throws IOException {
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
@@ -42,6 +60,7 @@ public class OutScopeOrigJob {
         line = br.readLine();
         int better = 0;
         int worse = 0;
+        int total = 0;
         int invalidCount = 0;
         while((line = br.readLine()) != null){
             AUDShipmentDW audShipment = new AUDShipmentDW(line);
@@ -49,6 +68,15 @@ public class OutScopeOrigJob {
                 invalidCount++;
                 continue;
             }
+            if (fcs.contains(audShipment.getNode())){
+                continue;
+            }
+
+//            if ("AAVC".equalsIgnoreCase(audShipment.getNode())){
+//                System.out.println(line);
+//                System.out.println(audShipment.getProcessingTime() + " === "+ audShipment.getProcessingTimeMinusWeekend());
+//                continue;
+//            }
             NodeLeadtime nodeLeadtime = leadtimeMap.get(audShipment.getNode());
 //            if (audShipment.getNode().equalsIgnoreCase("AGOC") && audShipment.getShipDate().after(audShipment.getRsd())  ){
 //                System.out.println(line);
@@ -68,23 +96,41 @@ public class OutScopeOrigJob {
                     outMap.put(audShipment.getNode(), nodeLeadtimeOutScope );
                 }
                 nodeLeadtimeOutScope.addTotal();
-                if (audShipment.getPreleadtime() != nodeLeadtime.getPreleadtime() && nodeLeadtime.getPreleadtime() !=367) {
-                    System.out.println(line);
-                    System.out.println(audShipment + "===" + nodeLeadtime.getPreleadtime());
-                }
-               // if (audShipment.getProcessingTime() < audShipment.getPreleadtime()){
-                if (audShipment.getProcessingTimeMinusWeekend() < audShipment.getPreleadtime()){
+                total++;
+//                if (audShipment.getPreleadtime() != nodeLeadtime.getPreleadtime() && nodeLeadtime.getPreleadtime() !=367) {
+//                    System.out.println(line);
+//                    System.out.println(audShipment + "===" + nodeLeadtime.getPreleadtime());
+//                }
+                //if (audShipment.getProcessingTime() <= audShipment.getPreleadtime()){
+                if (audShipment.getRange() <= audShipment.getPreleadtime() && audShipment.getLeadtime()>0){
                     better++;
                     nodeLeadtimeOutScope.addBetter();
                 }
-                if (audShipment.getProcessingTimeMinusWeekend() > (audShipment.getLeadtime() + 24)){
+                //if (audShipment.getProcessingTimeMinusWeekend() > (audShipment.getLeadtime() + 12)){
+                if (audShipment.getRange() > (audShipment.getLeadtime()+23-23)){
+//                    Integer ik = worseMap.get(audShipment.getLeadtime());
+//                    if (ik == null){
+//                        ik = new Integer(0);
+//                    }
+//                    ik++;
+//                    worseMap.put(audShipment.getLeadtime(), ik);
+                    if (audShipment.getLeadtime() == 0) {
+//                        System.out.println(audShipment.getNode());
+//                        System.out.println(line);
+//                        System.out.println(audShipment);
+//                        System.out.println(audShipment.getProcessingTime() + "," +
+//                                audShipment.getProcessingTimeMinusWeekend() + "," + audShipment.getRange()
+//                                + "," + audShipment.getLeadtime());
+                    }
                     worse++;
                     nodeLeadtimeOutScope.addWorse();
                 }
 
             }
         }
-        System.out.println(better + "," + worse + "," + invalidCount);
+        System.out.println(better + "," + worse + "," + total + ","+ invalidCount);
+        System.out.println((better*1.0)/total + "," + (worse*1.0)/total +  ","+ invalidCount);
+        System.out.println(worseMap);
         br.close();
         fr.close();
     }

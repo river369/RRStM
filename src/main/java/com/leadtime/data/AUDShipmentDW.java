@@ -74,25 +74,50 @@ public class AUDShipmentDW {
 
     public int getRange(){
         double pt = processingTimeMinusWeekend;
-        if (pt < 6) {
+        double cptFactorPerenct = 0.1;
+        int bufferDays = (int)(24 * cptFactorPerenct) + 1;
+        //int bufferDays = 0;
+
+        int ftBufferDays = 7;
+        //int ftBufferDays = 0;
+        //System.out.println(bufferDays);
+        if (pt <= 6) {
             return 0;
         }
         if (pt > 6 && pt <=23) {
+            if ((pt - 6) < ftBufferDays){
+                return 0;
+            }
             return 23;
         }
         if (pt > 23  && pt <= 47) {
+            if ((pt - 23 ) < bufferDays){
+                return 23;
+            }
             return 47;
         }
         if (pt > 47  && pt <= 71) {
+            if ((pt - 47 ) < bufferDays){
+                return 47;
+            }
             return 71;
         }
         if (pt > 71  && pt <= 119) {
+            if ((pt - 71 ) < bufferDays){
+                return 71;
+            }
             return  119;
         }
         if (pt > 119 && pt <= 167) {
+            if ((pt - 119 ) < bufferDays){
+                return 119;
+            }
             return 167;
         }
         if (pt > 167 && pt <= 335) {
+            if ((pt - 167 ) < bufferDays){
+                return 167;
+            }
             return 335;
         }
         if (pt > 335 && pt <= 503) {

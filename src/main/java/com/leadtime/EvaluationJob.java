@@ -36,8 +36,8 @@ public class EvaluationJob {
             evaluationJob.readAsinSorttype(asinSTFileNameFile);
             evaluationJob.checkShipment(shipmentFile);
             evaluationJob.evaluation();
-            //evaluationJob.printEvaluation(outputFileName);
-            evaluationJob.printEvaluationInConsole();
+            evaluationJob.printEvaluation(outputFileName);
+            //evaluationJob.printEvaluationInConsole();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,6 +45,21 @@ public class EvaluationJob {
 
     public EvaluationJob() {
         //fcs.add("AMUG");
+
+        String[] qudsiArray = new String[]{"AFMT","AFMU","AFMV","AEEV","AEEX","AEEW","ACPH", "ADBX", "ACPI"};
+        for(String s : qudsiArray){
+            fcs.add(s);
+        }
+
+        String[] wootArray = new String[] {"VUXA","AAMS","AGSL"} ;
+        for(String s : wootArray){
+            fcs.add(s);
+        }
+
+        String[] ingramArray = new String[] {"AZOT"} ;
+        for(String s : ingramArray){
+            fcs.add(s);
+        }
     }
 
     public void checkShipment(File file) throws IOException {
@@ -65,28 +80,26 @@ public class EvaluationJob {
             if  (fcs.contains(audShipment.getNode())){
                 continue;
             }
+            audShipment.setSortType(asinSortTypeMap.get(audShipment.getASIN()));
 
-            if  (!audShipment.getNode().equalsIgnoreCase("AAFY")){
-                continue;
-            }
-            if (!audShipment.getASIN().equalsIgnoreCase("B00DD5ZP4U")){
-                continue;
-            }
-            System.out.println(line);
-            System.out.println(audShipment);
-
-
+//            if  (!audShipment.getNode().equalsIgnoreCase("AAFY")){
+//                continue;
+//            }
+//            if (!audShipment.getASIN().equalsIgnoreCase("B00DD5ZP4U")){
+//                continue;
+//            }
+//            System.out.println(line);
+//            System.out.println(audShipment);
 
             //Test at FC level
             //String key = audShipment.getNode();
             // Test at GL level
             //String key = audShipment.getNode() + "," + audShipment.getGlname();
             // Test at Sortype
-            audShipment.setSortType(asinSortTypeMap.get(audShipment.getASIN()));
-            String key = audShipment.getNode() + "," + audShipment.getSortType();
-            // Test at ASIN
-            //String key = audShipment.getNode() + "," + audShipment.getASIN();
 
+            //String key = audShipment.getNode() + "," + audShipment.getSortType();
+            // Test at ASIN
+            String key = audShipment.getNode() + "," + audShipment.getASIN()+ "," + audShipment.getSortType();
 
             List<AUDShipmentDW> evaluationList = evaluationListMap.get(key);
             if (evaluationList == null) {
