@@ -15,6 +15,7 @@ public class EvaluationJob {
     Set<String> fcs = new HashSet<String>();
     Map<String, List<AUDShipmentDW>> evaluationListMap = new HashMap<String, List<AUDShipmentDW>>();
     Map<String, Evaulation> evaluationResultMap = new HashMap<String, Evaulation>();
+    Map<String, NodeLeadtime> leadtimeMap = new HashMap<String, NodeLeadtime>();
 
     Map<String, String> asinSortTypeMap = new HashMap<String, String>();
 
@@ -31,8 +32,12 @@ public class EvaluationJob {
 
         String outputFileName = "/Users/jianguog/dropship/ASINLevelLeadTime/data/evaluation.txt";
 
+        String nodeLeadtimeFileName = "/Users/jianguog/dropship/ASINLevelLeadTime/data/node_current_leadtime";
+        File nodeLeadtimeFile = new File(nodeLeadtimeFileName);
+
         EvaluationJob evaluationJob = new EvaluationJob();
         try {
+            evaluationJob.readNodeLeadtime(nodeLeadtimeFile);
             evaluationJob.readAsinSorttype(asinSTFileNameFile);
             evaluationJob.checkShipment(shipmentFile);
             evaluationJob.evaluation();
@@ -45,21 +50,21 @@ public class EvaluationJob {
 
     public EvaluationJob() {
         //fcs.add("AMUG");
-
-        String[] qudsiArray = new String[]{"AFMT","AFMU","AFMV","AEEV","AEEX","AEEW","ACPH", "ADBX", "ACPI"};
-        for(String s : qudsiArray){
-            fcs.add(s);
-        }
-
-        String[] wootArray = new String[] {"VUXA","AAMS","AGSL"} ;
-        for(String s : wootArray){
-            fcs.add(s);
-        }
-
-        String[] ingramArray = new String[] {"AZOT"} ;
-        for(String s : ingramArray){
-            fcs.add(s);
-        }
+//
+//        String[] qudsiArray = new String[]{"AFMT","AFMU","AFMV","AEEV","AEEX","AEEW","ACPH", "ADBX", "ACPI"};
+//        for(String s : qudsiArray){
+//            fcs.add(s);
+//        }
+//
+//        String[] wootArray = new String[] {"VUXA","AAMS","AGSL"} ;
+//        for(String s : wootArray){
+//            fcs.add(s);
+//        }
+//
+//        String[] ingramArray = new String[] {"AZOT"} ;
+//        for(String s : ingramArray){
+//            fcs.add(s);
+//        }
     }
 
     public void checkShipment(File file) throws IOException {
@@ -80,6 +85,13 @@ public class EvaluationJob {
             if  (fcs.contains(audShipment.getNode())){
                 continue;
             }
+
+            NodeLeadtime nodeLeadtime = leadtimeMap.get(audShipment.getNode());
+
+            if (nodeLeadtime == null || nodeLeadtime.getLeadtime() == 0) {
+                continue;
+            }
+
             audShipment.setSortType(asinSortTypeMap.get(audShipment.getASIN()));
 
 //            if  (!audShipment.getNode().equalsIgnoreCase("AAFY")){
@@ -92,7 +104,7 @@ public class EvaluationJob {
 //            System.out.println(audShipment);
 
             //Test at FC level
-            //String key = audShipment.getNode();
+            // String key = audShipment.getNode();
             // Test at GL level
             //String key = audShipment.getNode() + "," + audShipment.getGlname();
             // Test at Sortype
@@ -193,6 +205,23 @@ public class EvaluationJob {
             String asin = colums[5];
             String sortType =  colums[8];
             asinSortTypeMap.put(asin, sortType);
+            //System.out.println(nodeLeadtime);
+        }
+        br.close();
+        fr.close();
+    }
+
+    public void readNodeLeadtime(File file) throws IOException {
+        FileReader fr = new FileReader(file);
+        BufferedReader br = new BufferedReader(fr);
+        String line;
+        while((line = br.readLine()) != null){
+            String[] colums = line.split("\t");
+            String node =colums[1];
+            int leadtime = Integer.parseInt(colums[4]);
+            int preleadtime = Integer.parseInt(colums[5]);
+            NodeLeadtime nodeLeadtime = new NodeLeadtime(node, leadtime, preleadtime);
+            leadtimeMap.put(node,nodeLeadtime);
             //System.out.println(nodeLeadtime);
         }
         br.close();

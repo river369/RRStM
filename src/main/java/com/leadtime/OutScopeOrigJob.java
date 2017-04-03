@@ -78,6 +78,7 @@ public class OutScopeOrigJob {
 //                continue;
 //            }
             NodeLeadtime nodeLeadtime = leadtimeMap.get(audShipment.getNode());
+
 //            if (audShipment.getNode().equalsIgnoreCase("AGOC") && audShipment.getShipDate().after(audShipment.getRsd())  ){
 //                System.out.println(line);
 //                System.out.println(audShipment);
@@ -88,6 +89,9 @@ public class OutScopeOrigJob {
 //                System.out.println(audShipment);
 //            }
             if (nodeLeadtime != null) {
+                if (nodeLeadtime.getLeadtime() == 0) {
+                    continue;
+                }
                 audShipment.setLeadtime(nodeLeadtime.getLeadtime());
                 //audShipment.setPreleadtime(nodeLeadtime.getPreleadtime());
                 NodeLeadtimeOutScope nodeLeadtimeOutScope = outMap.get(audShipment.getNode());

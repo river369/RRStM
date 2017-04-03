@@ -43,6 +43,7 @@ public class LeadtimeChangeRelatedASINsJob {
         String line;
         while((line = br.readLine()) != null){
             String[] colums = line.split("\t");
+            //System.out.println(colums[0] );
             System.out.println(colums[1] + "," + colums[0] + "," + nodeAsinMap.get(colums[0]));
         }
 
