@@ -10,6 +10,8 @@ public class FTShipmentDW {
     int edd;
     int sr;
     int exsd;
+    String glname;
+    String sortType;
 
 //    warehouse_id	Legal Entity Id	fulfillment_shipment_id	ASIN	Order DateTime	ship_datetime	expected_ship_datetime	att_del_failed_pdd
 // att_del_failed_edd	no_att_scan	units	total_packages	dea	edd	sr	is_miss_exsd
@@ -78,6 +80,22 @@ public class FTShipmentDW {
 
     public void setExsd(int exsd) {
         this.exsd = exsd;
+    }
+
+    public String getGlname() {
+        return glname;
+    }
+
+    public void setGlname(String glname) {
+        this.glname = glname;
+    }
+
+    public String getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
     }
 
     @Override
