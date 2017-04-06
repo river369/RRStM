@@ -5,7 +5,7 @@ package com.leadtime.data;
  */
 public class FTAEvaulation {
     String key;
-    int total;
+    double total;
     double deameet;
     int eddmeet;
     int exsdmeet;
@@ -48,11 +48,11 @@ public class FTAEvaulation {
         this.key = key;
     }
 
-    public int getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 

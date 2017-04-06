@@ -3,6 +3,8 @@ package com.leadtime;
 import com.leadtime.data.*;
 
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -11,19 +13,27 @@ import java.util.*;
 public class FTAEvaluationJob {
     Set<String> ftOverslaSet = new HashSet<String>();
     Set<String> goodKeySet = new HashSet<String>();
+    Map<String, Integer> shipmentASINCount = new HashMap<String, Integer>();
+
     Map<String, FTAEvaulation> evaluationMap = new HashMap<String, FTAEvaulation>();
+    Set<String> allFC = new HashSet<String>();
     Set<String> stillValidFC = new HashSet<String>();
-    String type = "sort"; //fc, asin, gl, sort
-//  fc    1462316;549290;0.3756301647523517;211
-//  gl    1462316;553238;0.3783299916023623,340
-//  st    1462316;542008;0.37065039293832525,348
-//        1462316;817874;0.5593004521594511;405
+    String type = "asin"; //fc, asin, gl, sort
+//  fc    1462316;549290;0.3756301647523517;211,410  ／／1331103.9999998934;778165.0000000568;0.5846012032118596;261;410
+//  gl    1462316;553238;0.3783299916023623,340     ／／ 1331103.9999998934;772220.2059524357;0.580135140419154;357;410
+//  st    1462316;542008;0.37065039293832525,348     ／／ 1331103.9999998934;777760.2154762496;0.584297106369083;372;410
+//        1462316;817874;0.5593004521594511;405     // 1331103.9999998934;880589.8232990226;0.6615484765270732;405;410
+
+    //1308416.9999999134;794627.0000000624;0.6073193790665475;264;384
     Map<String, String> asinSortTypeMap = new HashMap<String, String>();
     Map<String, String> asinGLMap = new HashMap<String, String>();
 
+    Date maxDate;
+    Date minDate;
+
     public static void main(String[] args) {
         System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
-        String FTOverSlaList = "/Users/jianguog/dropship/ASINLevelLeadTime/data/FTOverSlaList-all";
+        String FTOverSlaList = "/Users/jianguog/dropship/ASINLevelLeadTime/data/FTOverSlaList-all"; //all,oversla,ft
         File fTOverSlaListFile = new File(FTOverSlaList);
         String FTPackage = "/Users/jianguog/dropship/ASINLevelLeadTime/data/FTPackage.txt";
         File FTPackageFile = new File(FTPackage);
@@ -36,11 +46,22 @@ public class FTAEvaluationJob {
         try {
             evaluationJob.readFCs(fTOverSlaListFile);
             evaluationJob.readAsinGLSorttype(asinSTFileNameFile);
+            evaluationJob.checkShipmentAsinCount(FTPackageFile);
             evaluationJob.checkShipment(FTPackageFile);
             evaluationJob.recheckShipment(FTPackageFile);
             //evaluationJob.printImpact();
             //evaluationJob.printImpact(FTEResult);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public FTAEvaluationJob(){
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            maxDate = dt.parse("2017/04/01 00:00:00");
+            minDate = dt.parse("2017/03/01 00:00:00");
+        } catch (ParseException e) {
             e.printStackTrace();
         }
     }
@@ -68,6 +89,36 @@ public class FTAEvaluationJob {
         fr.close();
     }
 
+    public void checkShipmentAsinCount(File file) throws IOException {
+
+        FileReader fr = new FileReader(file);
+        BufferedReader br = new BufferedReader(fr);
+
+        String line;
+        line = br.readLine();
+        int i = 0;
+        int invalidCount = 0;
+        while((line = br.readLine()) != null){
+            FTShipmentDW ftShipmentDW = new FTShipmentDW(line);
+            if (!ftOverslaSet.contains(ftShipmentDW.getNode())){
+                continue;
+            }
+            if(ftShipmentDW.getPadDate().after(maxDate) || ftShipmentDW.getPadDate().before(minDate)){
+                continue;
+            }
+            Integer count = shipmentASINCount.get(ftShipmentDW.getShipmentId());
+            if(count == null) {
+                count = new Integer(1);
+            } else {
+               count++;
+            }
+            shipmentASINCount.put(ftShipmentDW.getShipmentId(), count);
+        }
+
+        br.close();
+        fr.close();
+
+    }
     public void checkShipment(File file) throws IOException {
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
@@ -82,12 +133,11 @@ public class FTAEvaluationJob {
             if (!ftOverslaSet.contains(ftShipmentDW.getNode())){
                 continue;
             }
-
+            if(ftShipmentDW.getPadDate().after(maxDate) || ftShipmentDW.getPadDate().before(minDate)){
+                continue;
+            }
             ftShipmentDW.setSortType(asinSortTypeMap.get(ftShipmentDW.getAsin()));
             ftShipmentDW.setGlname(asinGLMap.get(ftShipmentDW.getAsin()));
-//            if (line.indexOf("B004477AO4")>0){
-//                System.out.println(ftShipmentDW.getAsin() + "  " + ftShipmentDW.getSortType() + "  " + ftShipmentDW.getGlname());
-//            }
             String key = getKey(ftShipmentDW, type);
 
             //System.out.println(ftShipmentDW);
@@ -98,14 +148,19 @@ public class FTAEvaluationJob {
                 ftaEvaulation.setKey(key);
                 evaluationMap.put(key, ftaEvaulation);
             }
-            ftaEvaulation.addTotal();
+            Integer count = shipmentASINCount.get(ftShipmentDW.getShipmentId());
+
+            //ftaEvaulation.addTotal();
+            //System.out.println(count);
+            ftaEvaulation.setTotal(ftaEvaulation.getTotal() + (1.0/count));
             if (ftShipmentDW.getExsd() ==  0 ){
                 ftaEvaulation.addExsdMeet();
             }
             if (ftShipmentDW.getEdd() ==  1 ){
                 ftaEvaulation.addEddMeet();
             }
-            ftaEvaulation.setDeameet(ftaEvaulation.getDeameet() + ftShipmentDW.getDea());
+
+            ftaEvaulation.setDeameet(ftaEvaulation.getDeameet() + (ftShipmentDW.getDea()/count));
 
             if (ftShipmentDW.getSr() ==  1 ){
                 ftaEvaulation.addSrMeet();
@@ -124,31 +179,34 @@ public class FTAEvaluationJob {
         line = br.readLine();
         int i = 0;
         int invalidCount = 0;
-        int totalcount = 0;
-        int goodcount = 0;
+        double totalcount = 0;
+        double goodcount = 0;
         while((line = br.readLine()) != null){
 
             FTShipmentDW ftShipmentDW = new FTShipmentDW(line);
             if (!ftOverslaSet.contains(ftShipmentDW.getNode())){
                 continue;
             }
+            if(ftShipmentDW.getPadDate().after(maxDate) || ftShipmentDW.getPadDate().before(minDate)){
+                continue;
+            }
             ftShipmentDW.setSortType(asinSortTypeMap.get(ftShipmentDW.getAsin()));
             ftShipmentDW.setGlname(asinGLMap.get(ftShipmentDW.getAsin()));
-            if (!ftShipmentDW.getNode().equalsIgnoreCase("AEEX")){
-                //continue;
-            }
-            //System.out.println(line);
             String key = getKey(ftShipmentDW, type);
             if(evaluationMap.get(key) == null){
 //                System.out.println(line + ":"+key);
                 continue;
             }
-            totalcount++;
+            Integer count = shipmentASINCount.get(ftShipmentDW.getShipmentId());
+
+            totalcount= totalcount+ (1.0/count);
+            allFC.add(ftShipmentDW.getNode());
             if (evaluationMap.get(key).getDeaPercent() >= 0.94
                     && evaluationMap.get(key).getSrPercent() >= 0.9) {
                 //System.out.println("----"+evaluationMap.get(key).getPercent());
                 stillValidFC.add(ftShipmentDW.getNode());
-                goodcount++;
+                goodcount= goodcount+ (1.0/count);
+                //goodcount++;
             }
 //            if (evaluationMap.get(key).getEddPercent() >= 0.9) {
 //                goodcount++;
@@ -168,7 +226,7 @@ public class FTAEvaluationJob {
 
         br.close();
         fr.close();
-        System.out.println(totalcount + ";" + goodcount+";"+(1.0*goodcount)/totalcount + ";"+ stillValidFC.size());
+        System.out.println(totalcount + ";" + goodcount+";"+(1.0*goodcount)/totalcount + ";"+ stillValidFC.size()+ ";"+ allFC.size());
     }
 
     String getKey(FTShipmentDW ftShipmentDW, String type){

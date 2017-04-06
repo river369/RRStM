@@ -1,9 +1,16 @@
 package com.leadtime.data;
 
+import com.leadtime.utils.LeadTimeDateUtils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by jianguog on 17/4/1.
  */
 public class FTShipmentDW {
+    String shipmentId;
     String node;
     String asin;
     double dea;
@@ -12,6 +19,8 @@ public class FTShipmentDW {
     int exsd;
     String glname;
     String sortType;
+    Date padDate;
+
 
 //    warehouse_id	Legal Entity Id	fulfillment_shipment_id	ASIN	Order DateTime	ship_datetime	expected_ship_datetime	att_del_failed_pdd
 // att_del_failed_edd	no_att_scan	units	total_packages	dea	edd	sr	is_miss_exsd
@@ -21,6 +30,7 @@ public class FTShipmentDW {
     public FTShipmentDW(String line) {
         //System.out.println(line);
         String[] colums = line.split("\t");
+        shipmentId = colums[2];
         node = colums[0];
         asin = colums[3];
         dea = Double.parseDouble(colums[13]);
@@ -32,6 +42,14 @@ public class FTShipmentDW {
 //        edd = (int)Double.parseDouble(colums[13]);
 //        sr = (int)Double.parseDouble(colums[14]);
 //        exsd = (int)Double.parseDouble(colums[15]);
+
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+
+            this.padDate = dt.parse(colums[7]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getNode() {
@@ -96,6 +114,22 @@ public class FTShipmentDW {
 
     public void setSortType(String sortType) {
         this.sortType = sortType;
+    }
+
+    public String getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setShipmentId(String shipmentId) {
+        this.shipmentId = shipmentId;
+    }
+
+    public Date getPadDate() {
+        return padDate;
+    }
+
+    public void setPadDate(Date padDate) {
+        this.padDate = padDate;
     }
 
     @Override
